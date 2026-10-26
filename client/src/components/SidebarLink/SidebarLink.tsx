@@ -8,6 +8,7 @@ interface SidebarLinkProps {
   label: string;
   exact?: boolean;
   variant: 'light' | 'dark';
+  badge?: number;
 }
 
 const variants = {
@@ -15,7 +16,7 @@ const variants = {
   dark: { active: 'bg-white/10 text-white', idle: 'text-white/70 hover:bg-white/5' },
 };
 
-export const SidebarLink = ({ href, label, exact = false, variant }: SidebarLinkProps) => {
+export const SidebarLink = ({ href, label, exact = false, variant, badge }: SidebarLinkProps) => {
   const pathname = usePathname();
   const isActive = exact ? pathname === href : pathname.startsWith(href);
   const styles = variants[variant];
@@ -23,9 +24,14 @@ export const SidebarLink = ({ href, label, exact = false, variant }: SidebarLink
   return (
     <Link
       href={href}
-      className={`rounded-lg px-3 py-2 text-sm font-medium ${isActive ? styles.active : styles.idle}`}
+      className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium ${
+        isActive ? styles.active : styles.idle
+      }`}
     >
       {label}
+      {badge ? (
+        <span className="rounded-full bg-rose px-2 py-0.5 text-xs font-semibold text-ink">{badge}</span>
+      ) : null}
     </Link>
   );
 };
