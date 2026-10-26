@@ -3,6 +3,10 @@ import cors from 'cors';
 import { NODE_ENV, PORT } from './config';
 import { errorsMiddleware } from './middlewares/errorsMiddleware';
 import { router as productsRouter } from './features/products/product.router';
+import { router as inventoryRouter } from './features/inventory/inventory.router';
+import { router as recipesRouter } from './features/recipes/recipe.router';
+import { router as donationsRouter } from './features/donations/donation.router';
+import { router as usersRouter } from './features/users/user.router';
 
 const app = express();
 app.use(express.json());
@@ -14,6 +18,10 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/products', productsRouter);
+app.use('/api/inventory', inventoryRouter);
+app.use('/api/recipes', recipesRouter);
+app.use('/api/donations', donationsRouter);
+app.use('/api/users', usersRouter);
 
 // Error handling middleware
 app.use(errorsMiddleware);
