@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { InventoryProvider } from '@/providers/InventoryProvider';
 import { RecipesProvider } from '@/providers/RecipesProvider';
 import { UsersProvider } from '@/providers/UsersProvider';
@@ -9,7 +10,9 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
       <InventoryProvider>
         <RecipesProvider>
           <div className="flex min-h-screen">
-            <UserSidebar />
+            <Suspense fallback={<aside className="w-56 shrink-0 border-r border-black/5 bg-white" />}>
+              <UserSidebar />
+            </Suspense>
             <main className="flex-1 p-8">{children}</main>
           </div>
         </RecipesProvider>
