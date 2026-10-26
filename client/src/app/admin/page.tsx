@@ -35,9 +35,9 @@ const AdminHomePage = () => {
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Donaciones pendientes" value={summary?.pendingDonations ?? 0} tone="yellow" />
-        <StatCard label="Recetas por revisar" value={pendingRecipes} tone="blue" />
-        <StatCard label="Productos en catálogo" value={products.length} tone="rose" />
+      <StatCard label="Donaciones pendientes" value={summary?.pendingDonations ?? 0} tone="yellow" emoji="🎁" />
+<StatCard label="Recetas por revisar" value={pendingRecipes} tone="blue" emoji="📖" />
+<StatCard label="Productos en catálogo" value={products.length} tone="rose" emoji="🥕" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">

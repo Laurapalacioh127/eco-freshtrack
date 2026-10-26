@@ -44,7 +44,7 @@ const AdminDonationsPage = () => {
         title="Panel de donaciones"
         subtitle="Coordina ofertas, rutas y entregas en tiempo real."
         action={
-          <button type="button" className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white">
+          <button type="button" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white">
             + Registrar donación
           </button>
         }

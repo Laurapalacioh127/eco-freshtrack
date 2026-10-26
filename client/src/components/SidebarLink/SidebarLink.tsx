@@ -12,8 +12,14 @@ interface SidebarLinkProps {
 }
 
 const variants = {
-  light: { active: 'bg-brand-soft text-brand-dark', idle: 'text-neutral-600 hover:bg-black/5' },
-  dark: { active: 'bg-white/10 text-white', idle: 'text-white/70 hover:bg-white/5' },
+  light: {
+    active: 'bg-brand text-white shadow-glow-brand',
+    idle: 'text-neutral-700 hover:bg-brand-soft',
+  },
+  dark: {
+    active: 'bg-white/15 text-white',
+    idle: 'text-white/70 hover:bg-white/10',
+  },
 };
 
 export const SidebarLink = ({ href, label, exact = false, variant, badge }: SidebarLinkProps) => {
@@ -24,13 +30,13 @@ export const SidebarLink = ({ href, label, exact = false, variant, badge }: Side
   return (
     <Link
       href={href}
-      className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium ${
+      className={`flex items-center justify-between rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
         isActive ? styles.active : styles.idle
       }`}
     >
       {label}
       {badge ? (
-        <span className="rounded-full bg-rose px-2 py-0.5 text-xs font-semibold text-ink">{badge}</span>
+        <span className="rounded-full bg-rose px-2 py-0.5 text-xs font-bold text-ink">{badge}</span>
       ) : null}
     </Link>
   );

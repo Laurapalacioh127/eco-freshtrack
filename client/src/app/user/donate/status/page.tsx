@@ -37,7 +37,7 @@ const DonationStatusPage = () => (
       <p className="text-xs">Tu impacto sigue creciendo.</p>
     </div>
 
-    <Link href="/user" className="w-fit rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white">
+    <Link href="/user" className="w-fit rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white">
       Volver al inicio
     </Link>
   </div>

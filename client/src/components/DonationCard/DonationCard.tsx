@@ -27,7 +27,7 @@ export const DonationCard = ({ donation }: { donation: Donation }) => (
     </div>
 
     <div className="grid gap-3 md:grid-cols-2">
-      <button type="button" className="rounded-lg bg-brand py-2.5 text-sm font-semibold text-white">
+      <button type="button" className="rounded-lg bg-brand shadow-glow-brand transition hover:-translate-y-0.5 py-2.5 text-sm font-semibold text-white">
         Contactar por WhatsApp
       </button>
       <button type="button" className="rounded-lg border border-black/10 py-2.5 text-sm font-semibold">

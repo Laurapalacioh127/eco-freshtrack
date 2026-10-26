@@ -2,11 +2,12 @@ import Link from 'next/link';
 import type { Portal } from '@/types';
 import { portalTheme } from '@/utils/portalTheme';
 import { Logo } from '@/components/logo/Logo';
+import { Photo } from '@/components/Photo/Photo';
 import { AuthForm } from '@/components/AuthForm/AuthForm';
 
-const copy: Record<Portal, { badge: string; title: string }> = {
-  user: { badge: 'Cuenta personal', title: 'Ingresa a tu cuenta' },
-  admin: { badge: 'Portal de operaciones', title: 'Acceso al equipo FreshTrack' },
+const copy: Record<Portal, { badge: string; title: string; photo: string }> = {
+  user: { badge: 'Cuenta personal', title: 'Ingresa a tu cuenta', photo: '/photos/login-user.jpg' },
+  admin: { badge: 'Portal de operaciones', title: 'Acceso al equipo FreshTrack', photo: '/photos/login-admin.jpg' },
 };
 
 export const AuthScreen = ({ portal }: { portal: Portal }) => {
@@ -14,19 +15,25 @@ export const AuthScreen = ({ portal }: { portal: Portal }) => {
 
   return (
     <div className="grid min-h-screen md:grid-cols-2">
-      <section className="flex flex-col justify-center gap-6 px-8 py-10 md:px-16">
+      <section className="flex flex-col justify-center gap-6 px-6 py-10 md:px-16">
         <Logo />
         <div className="flex items-center gap-3 text-xs">
-          <Link href="/" className="font-semibold">← Cambiar de rol</Link>
-          <span className={`rounded-full px-2 py-0.5 font-semibold ${theme.badge}`}>{copy[portal].badge}</span>
+          <Link href="/" className="font-bold">← Cambiar de rol</Link>
+          <span className={`rounded-full px-3 py-1 font-bold ${theme.badge}`}>{copy[portal].badge}</span>
         </div>
-        <h1 className="text-4xl font-light leading-tight">{copy[portal].title}</h1>
-        <AuthForm portal={portal} />
+        <div className="max-w-md rounded-[2rem] bg-white p-8 shadow-pop">
+          <h1 className="mb-6 text-4xl leading-tight">{copy[portal].title}</h1>
+          <AuthForm portal={portal} />
+        </div>
       </section>
 
-      <aside className={`hidden flex-col justify-end p-12 md:flex ${theme.card}`}>
-        <p className="max-w-xs text-lg font-semibold">“Cada alimento aprovechado es una pequeña victoria.”</p>
-        <p className="mt-2 text-xs text-neutral-600">Comunidad FreshTrack</p>
+      <aside className={`relative hidden overflow-hidden md:block ${theme.card}`}>
+        <span className="absolute inset-0 flex items-center justify-center text-[10rem]">{theme.emoji}</span>
+        <Photo src={copy[portal].photo} sizes="50vw" priority />
+        <div className="absolute inset-x-8 bottom-8 rounded-3xl bg-white/90 p-6 shadow-pop backdrop-blur">
+          <p className="text-lg font-bold">“Cada alimento aprovechado es una pequeña victoria.”</p>
+          <p className="mt-1 text-xs text-neutral-600">Comunidad FreshTrack</p>
+        </div>
       </aside>
     </div>
   );

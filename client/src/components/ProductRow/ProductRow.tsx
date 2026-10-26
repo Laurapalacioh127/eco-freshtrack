@@ -5,7 +5,7 @@ export const ProductRow = ({ product }: { product: Product }) => (
   <tr className="border-b border-black/5">
     <td className="py-3">
       <div className="flex items-center gap-3">
-        <Thumb name={product.name} />
+        <Thumb name={product.name} category={product.category} />
         <span className="font-semibold">{product.name}</span>
       </div>
     </td>

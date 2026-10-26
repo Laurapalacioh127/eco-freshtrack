@@ -19,7 +19,7 @@ export const AdminSidebar = () => {
   ];
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-6 bg-ink p-4 text-white">
+    <aside className="m-4 flex w-60 shrink-0 flex-col gap-6 rounded-[2rem] bg-ink p-5 text-white shadow-pop">
       <Logo light />
       <nav className="flex flex-col gap-1">
         {links.map((link) => (

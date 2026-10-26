@@ -18,7 +18,7 @@ export const UserSidebar = () => {
   const { household } = useUsers();
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col gap-6 border-r border-black/5 bg-white p-4">
+    <aside className="m-4 flex w-56 shrink-0 flex-col gap-6 rounded-[2rem] bg-white p-5 shadow-soft">
       <Logo />
       <nav className="flex flex-col gap-1">
         {links.map((link) => (

@@ -8,7 +8,7 @@ export const InventoryRow = ({ item }: { item: InventoryItem }) => (
     href={`/user/inventory/${item.id}`}
     className="flex items-center gap-4 rounded-2xl border border-black/5 bg-white p-4"
   >
-    <Thumb name={item.name} />
+    <Thumb name={item.name} category={item.category} />
     <div className="flex flex-1 flex-col gap-1">
       <StatusBadge status={item.status} expiresInDays={item.expiresInDays} />
       <p className="font-medium">{item.name}</p>

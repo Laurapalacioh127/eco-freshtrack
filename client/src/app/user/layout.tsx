@@ -10,7 +10,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
       <InventoryProvider>
         <RecipesProvider>
           <div className="flex min-h-screen">
-            <Suspense fallback={<aside className="w-56 shrink-0 border-r border-black/5 bg-white" />}>
+            <Suspense fallback={<aside className="m-4 w-56 shrink-0 rounded-[2rem] bg-white shadow-soft" />}>
               <UserSidebar />
             </Suspense>
             <main className="flex-1 p-8">{children}</main>

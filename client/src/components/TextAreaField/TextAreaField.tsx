@@ -15,7 +15,7 @@ export const TextAreaField = ({ label, placeholder, value, onChange }: TextAreaF
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-lg border border-black/10 bg-white px-3 py-2.5 text-sm font-normal outline-none focus:border-black/40"
+      className="rounded-2xl border-2 border-transparent bg-cream px-4 py-3 text-sm font-normal outline-none transition focus:border-brand focus:bg-white"
     />
   </label>
 );

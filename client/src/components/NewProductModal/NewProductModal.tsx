@@ -31,7 +31,7 @@ export const NewProductModal = ({ onClose }: { onClose: () => void }) => {
         </div>
         <AuthInput label="Sustitutos" placeholder="Buscar productos sustitutos" value={substitutes} onChange={setSubstitutes} />
         <div className="flex gap-3">
-          <button type="submit" className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white">
+          <button type="submit" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white">
             Guardar
           </button>
           <button

@@ -59,7 +59,7 @@ const NewRecipePage = () => {
       </div>
       <button
         type="submit"
-        className="w-fit rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white"
+        className="w-fit rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white"
       >
         Publicar receta en la comunidad →
       </button>

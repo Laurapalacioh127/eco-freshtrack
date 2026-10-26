@@ -43,7 +43,7 @@ const InventoryPage = () => {
         action={
           <Link
             href="/user/scan"
-            className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
+            className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
           >
             + Agregar alimento
           </Link>

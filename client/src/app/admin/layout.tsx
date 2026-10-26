@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <DonationsProvider>
           <RecipesProvider>
             <div className="flex min-h-screen">
-              <Suspense fallback={<aside className="w-60 shrink-0 bg-ink" />}>
+              <Suspense fallback={<aside className="m-4 w-60 shrink-0 rounded-[2rem] bg-ink" />}>
                 <AdminSidebar />
               </Suspense>
               <div className="flex flex-1 flex-col">

@@ -51,7 +51,7 @@ const AdminCatalogPage = () => {
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
+              className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
             >
               + Nuevo producto maestro
             </button>

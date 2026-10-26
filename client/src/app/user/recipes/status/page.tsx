@@ -24,14 +24,14 @@ const RecipeStatusPage = () => {
           : 'Nuestro equipo verificará los ingredientes y la información nutricional.'}
       </p>
       {approved ? (
-        <Link href="/user/recipes" className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white">
+        <Link href="/user/recipes" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white">
           Ver recetas
         </Link>
       ) : (
         <button
           type="button"
           onClick={() => setApproved(true)}
-          className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white"
+          className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white"
         >
           Simular aprobación
         </button>

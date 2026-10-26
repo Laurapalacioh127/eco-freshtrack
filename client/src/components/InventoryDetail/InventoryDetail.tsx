@@ -48,10 +48,10 @@ export const InventoryDetail = () => {
         <DetailField label="Vencimiento" value={formatExpiry(item.expiresInDays)} />
         <DetailField label="Estado" value={statusLabels[item.status]} />
       </div>
-      <Link href="/user/recipes" className="rounded-full bg-brand py-3 text-center text-sm font-semibold text-white">
+      <Link href="/user/recipes" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 py-3 text-center text-sm font-semibold text-white">
         Buscar receta
       </Link>
-      <Link href="/user/donate" className="rounded-full bg-ops py-3 text-center text-sm font-semibold text-white">
+      <Link href="/user/donate" className="rounded-full bg-ops shadow-glow-ops transition hover:-translate-y-0.5 py-3 text-center text-sm font-semibold text-white">
         Donar alimento
       </Link>
     </div>

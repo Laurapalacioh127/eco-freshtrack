@@ -24,9 +24,9 @@ const UserHomePage = () => {
       <h1 className="text-4xl font-light">Hola, {household?.name.split(' ')[0]} 👋</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Registrados" value={summary?.registered ?? 0} tone="blue" />
-        <StatCard label="Por vencer" value={summary?.expiringSoon ?? 0} hint="Próximos 3 días" tone="yellow" />
-        <StatCard label="Vencidos" value={summary?.expired ?? 0} hint="Revísalos hoy" tone="rose" />
+        <StatCard label="Registrados" value={summary?.registered ?? 0} tone="blue" emoji="📦" />
+<StatCard label="Por vencer" value={summary?.expiringSoon ?? 0} hint="Próximos 3 días" tone="yellow" emoji="⏰" />
+<StatCard label="Vencidos" value={summary?.expired ?? 0} hint="Revísalos hoy" tone="rose" emoji="🥀" />
       </div>
 
       <section className="flex flex-col gap-4">

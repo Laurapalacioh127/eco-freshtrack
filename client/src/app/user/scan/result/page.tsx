@@ -40,7 +40,7 @@ const ScanResultPage = () => {
       <div className="flex gap-3">
         <Link
           href="/user/inventory"
-          className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
+          className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
         >
           Guardar en inventario ✓
         </Link>

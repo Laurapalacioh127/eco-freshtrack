@@ -21,7 +21,7 @@ const ScanPage = () => (
     <div className="flex flex-col items-center gap-3 text-center">
       <p className="font-semibold">Centra el alimento</p>
       <p className="text-xs text-white/60">Procura tener buena iluminación</p>
-      <Link href="/user/scan/result" className="rounded-full bg-brand px-6 py-3 text-sm font-semibold">
+      <Link href="/user/scan/result" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold">
         Escanear alimento con IA
       </Link>
       <Link href="/user/scan/result" className="text-sm text-white/80">

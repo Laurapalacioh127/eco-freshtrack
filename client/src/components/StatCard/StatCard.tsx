@@ -11,12 +11,16 @@ interface StatCardProps {
   value: number | string;
   hint?: string;
   tone: Tone;
+  emoji?: string;
 }
 
-export const StatCard = ({ label, value, hint, tone }: StatCardProps) => (
-  <div className={`rounded-2xl p-5 ${tones[tone]}`}>
-    <p className="text-sm">{label}</p>
-    <p className="mt-2 text-5xl font-light">{value}</p>
-    {hint && <p className="mt-1 text-xs text-neutral-600">{hint}</p>}
+export const StatCard = ({ label, value, hint, tone, emoji }: StatCardProps) => (
+  <div
+    className={`relative overflow-hidden rounded-[1.75rem] p-5 shadow-soft transition hover:-translate-y-1 hover:rotate-1 hover:shadow-pop ${tones[tone]}`}
+  >
+    {emoji && <span className="absolute right-4 top-4 text-3xl">{emoji}</span>}
+    <p className="text-sm font-semibold">{label}</p>
+    <p className="mt-2 text-6xl font-extrabold tracking-tight">{value}</p>
+    {hint && <p className="mt-1 text-xs text-neutral-700">{hint}</p>}
   </div>
 );
