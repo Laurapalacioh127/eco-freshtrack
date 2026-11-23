@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import type { Recipe } from '@/types';
-import { Photo } from '@/components/Photo/Photo';
 import { getFoodEmoji } from '@/utils/foodEmoji';
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
@@ -13,11 +12,6 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
     <article className="group flex flex-col gap-3 rounded-3xl bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:shadow-pop">
       <div className="relative flex h-40 items-center justify-center overflow-hidden rounded-2xl bg-sun text-6xl">
         <span>{getFoodEmoji(recipe.title)}</span>
-        <Photo
-          src={`/photos/recipes/${recipe.id}.jpg`}
-          sizes="(min-width: 768px) 33vw, 100vw"
-          className="transition duration-500 group-hover:scale-105"
-        />
       </div>
       <div className="flex flex-col gap-3 px-1 pb-1">
         <p className="text-xs font-semibold text-neutral-500">

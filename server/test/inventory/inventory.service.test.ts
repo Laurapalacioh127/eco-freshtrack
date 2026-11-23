@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { before, beforeEach, mock, test } from 'node:test';
 
+import type { CreateInventoryItemDTO } from '../../src/features/inventory/inventory.types.js';
+
 type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 
 const findAllInventoryRepository = mock.fn<AsyncFn>();
@@ -94,7 +96,7 @@ test('getShoppingListService returns the repository rows unchanged', async () =>
   assert.deepEqual(await getShoppingListService(USER), rows);
 });
 
-const dto = { userId: USER, name: 'Leche', category: 'Lácteos', quantity: '1 L', expiresOn: '2030-01-15' };
+const dto: CreateInventoryItemDTO = { userId: USER, name: 'Leche', category: 'Lácteos', quantity: '1 L', expiresOn: '2030-01-15' };
 
 test('createInventoryItemService passes the DTO to the repository unchanged', async () => {
   createInventoryItemRepository.mock.resetCalls();

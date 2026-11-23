@@ -5,7 +5,7 @@ import { useAxios } from './AxiosProvider';
 import type { User } from '@/types';
 
 interface UsersContextValue {
-  // The signed-in user's profile (points, kg saved) from GET /api/users/me.
+  // The signed-in user's profile (id, name, email, role) from GET /api/users/me.
   me: User | null;
   loading: boolean;
   error: string | null;

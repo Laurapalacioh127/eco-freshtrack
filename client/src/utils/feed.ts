@@ -24,7 +24,7 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
       id: `donation-${donation.id}`,
       title: 'Nueva oferta de donación',
       detail: `${donation.items} · ${donation.zone}`,
-      tag: 'Urgencia alta',
+      tag: 'Nueva',
       actionLabel: 'Revisar oferta',
       href: '/admin/donations',
     }));

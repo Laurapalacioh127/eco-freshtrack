@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Boom from '@hapi/boom';
 import { getUserFromRequest } from '../../middlewares/authMiddleware';
+import { readCategory } from '../../utils/categories';
 import { readRequiredText } from '../../utils/readText';
 import {
   createInventoryItemService,
@@ -38,7 +39,7 @@ export const createInventoryItemController = async (req: Request, res: Response)
   const item = await createInventoryItemService({
     userId,
     name: readRequiredText(body, 'name', 'nombre', 120),
-    category: readRequiredText(body, 'category', 'categoría', 60),
+    category: readCategory(body, 'category', 'categoría'),
     quantity: readRequiredText(body, 'quantity', 'cantidad', 40),
     expiresOn: readIsoDate(body, 'expiresOn', 'fecha de vencimiento'),
   });

@@ -20,8 +20,12 @@ const byCategory: Record<string, string> = {
   Frutas: '🍓',
   Verduras: '🥬',
   Lácteos: '🥛',
-  Enlatados: '🥫',
-  Despensa: '🍚',
+  Carnes: '🥩',
+  Panadería: '🍞',
+  Granos: '🍚',
+  Bebidas: '🥤',
+  Congelados: '🧊',
+  Otros: '🍽️',
 };
 
 export const getFoodEmoji = (name: string, category?: string): string => {

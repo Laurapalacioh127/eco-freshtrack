@@ -134,7 +134,7 @@ export const AuthForm = ({ portal }: { portal: Portal }) => {
       {mode === 'register' && (
         <AuthInput
           label="Nombre completo"
-          placeholder="Valentina Ríos"
+          placeholder="Tu nombre"
           autoComplete="name"
           value={values.name}
           onChange={setField('name')}

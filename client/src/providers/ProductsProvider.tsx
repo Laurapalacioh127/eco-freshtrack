@@ -1,13 +1,22 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useAxios } from './AxiosProvider';
-import type { Product } from '@/types';
+import type { Product, ProductCategory } from '@/types';
+import { upsertById } from '@/utils/upsertById';
+
+export interface CreateProductInput {
+  name: string;
+  category: ProductCategory;
+  shelfLifeDays: number;
+  substitutes: string[];
+}
 
 interface ProductsContextType {
   products: Product[];
   loading: boolean;
   error: string | null;
+  createProduct: (input: CreateProductInput) => Promise<Product>;
 }
 
 const ProductsContext = createContext<ProductsContextType | null>(null);
@@ -33,8 +42,17 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     onInit();
   }, [axios]);
 
+  const createProduct = useCallback(
+    async (input: CreateProductInput) => {
+      const res = await axios.post<Product>('/api/products', input);
+      setProducts((prev) => upsertById(prev, res.data));
+      return res.data;
+    },
+    [axios],
+  );
+
   return (
-    <ProductsContext.Provider value={{ products, loading, error }}>
+    <ProductsContext.Provider value={{ products, loading, error, createProduct }}>
       {children}
     </ProductsContext.Provider>
   );

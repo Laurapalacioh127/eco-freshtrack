@@ -9,7 +9,7 @@ mockAuthModules();
 const findAllDonationsRepository = mock.fn(async (_status?: string) => []);
 const findDonationByIdRepository = mock.fn(async () => undefined);
 const findDonationSummaryRepository = mock.fn(async () => ({
-  kgRescued: 48.6, dailyGoalPercent: 81, families: 24, deliveries: 7, pendingDonations: 1,
+  totalDonations: 5, pendingDonations: 1, approvedDonations: 2, completedDonations: 2,
 }));
 
 mock.module('../../src/features/donations/donation.repository', {

@@ -71,10 +71,51 @@ test('POST /api/donations returns 400 when the zone is blank', async () => {
   assert.equal(res.status, 400);
 });
 
-test('POST /api/donations returns 403 for an admin', async () => {
+test('POST /api/donations lets an admin register a donation with a null owner', async () => {
+  const res = await request(app)
+    .post('/api/donations')
+    .set(authHeader('admin'))
+    .send({ donorName: 'Ana', zone: 'Cali', items: 'Pan', expiresLabel: 'Vence hoy' });
+
+  assert.equal(res.status, 201);
+  assert.deepEqual(createDonationRepository.mock.calls[0].arguments[0], {
+    userId: null, donorName: 'Ana', zone: 'Cali', items: 'Pan', expiresLabel: 'Vence hoy',
+  });
+});
+
+test('POST /api/donations returns 400 for an admin without donorName', async () => {
   const res = await request(app).post('/api/donations').set(authHeader('admin')).send(body);
 
-  assert.equal(res.status, 403);
+  assert.equal(res.body.message, 'El campo "nombre del donante" es obligatorio');
+});
+
+test('POST /api/donations defaults the expiry label to "Sin fecha indicada" for a household', async () => {
+  await request(app).post('/api/donations').set(authHeader('household')).send({ zone: 'Cali', items: 'Pan' });
+
+  assert.deepEqual(createDonationRepository.mock.calls[0].arguments[0], {
+    userId: HOUSEHOLD.id, donorName: 'Hogar', zone: 'Cali', items: 'Pan', expiresLabel: 'Sin fecha indicada',
+  });
+});
+
+test('POST /api/donations defaults a blank expiry label to "Sin fecha indicada"', async () => {
+  await request(app).post('/api/donations').set(authHeader('household')).send({ ...body, expiresLabel: '   ' });
+
+  assert.equal((createDonationRepository.mock.calls[0].arguments[0] as { expiresLabel: string }).expiresLabel, 'Sin fecha indicada');
+});
+
+test('POST /api/donations returns 400 when the expiry label is longer than 60 characters', async () => {
+  const res = await request(app)
+    .post('/api/donations')
+    .set(authHeader('household'))
+    .send({ ...body, expiresLabel: 'a'.repeat(61) });
+
+  assert.equal(res.body.message, 'El campo "vencimiento" no puede superar 60 caracteres');
+});
+
+test('POST /api/donations returns 400 when the items are empty', async () => {
+  const res = await request(app).post('/api/donations').set(authHeader('household')).send({ ...body, items: '' });
+
+  assert.equal(res.status, 400);
 });
 
 test('POST /api/donations returns 401 without a token', async () => {

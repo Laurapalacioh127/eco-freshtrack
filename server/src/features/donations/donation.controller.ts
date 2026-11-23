@@ -11,6 +11,8 @@ import {
   updateDonationStatusService,
 } from './donation.service';
 
+const DEFAULT_EXPIRES_LABEL = 'Sin fecha indicada';
+
 export const getDonationsController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const status = typeof req.query.status === 'string' ? req.query.status : undefined;
@@ -40,12 +42,22 @@ export const createDonationController = async (req: Request, res: Response) => {
   const user = getUserFromRequest(req);
   const body = (req.body ?? {}) as Record<string, unknown>;
 
+  const isAdmin = user.role === 'admin';
+  const donorName = isAdmin ? readRequiredText(body, 'donorName', 'nombre del donante', 120) : user.name;
+  const zone = readRequiredText(body, 'zone', 'lugar de recogida');
+  const items = readRequiredText(body, 'items', 'alimentos');
+  const rawExpires = body.expiresLabel;
+  const hasExpires = typeof rawExpires === 'string' ? rawExpires.trim() !== '' : rawExpires != null;
+  const expiresLabel = hasExpires
+    ? readRequiredText(body, 'expiresLabel', 'vencimiento', 60)
+    : DEFAULT_EXPIRES_LABEL;
+
   const donation = await createDonationService({
-    userId: user.id,
-    donorName: user.name,
-    zone: readRequiredText(body, 'zone', 'lugar de recogida'),
-    items: readRequiredText(body, 'items', 'alimentos'),
-    expiresLabel: readRequiredText(body, 'expiresLabel', 'vencimiento'),
+    userId: isAdmin ? null : user.id,
+    donorName,
+    zone,
+    items,
+    expiresLabel,
   });
 
   res.status(201).json(donation);

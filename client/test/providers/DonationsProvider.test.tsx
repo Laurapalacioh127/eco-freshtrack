@@ -22,7 +22,7 @@ vi.mock('@/utils/realtime', async (importOriginal) => ({
   },
 }));
 
-const summary = { kgRescued: 1, dailyGoalPercent: 10, families: 1, deliveries: 1, pendingDonations: 0 };
+const summary = { totalDonations: 0, pendingDonations: 0, approvedDonations: 0, completedDonations: 0 };
 const donation = { id: 'd1', donorName: 'Ana', zone: 'Cali', items: 'Pan', expiresLabel: 'Vence hoy', status: 'pending' };
 
 const emit = async (event: string, payload: unknown) => {
@@ -121,4 +121,26 @@ test('removes the channel on unmount', async () => {
   unmount();
 
   expect(unsubscribe).toHaveBeenCalledTimes(1);
+});
+
+test('createDonation posts the exact body including donorName', async () => {
+  post.mockResolvedValue({ data: donation });
+  const { result } = await renderLoaded();
+
+  await act(async () => {
+    await result.current.createDonation({ zone: 'Cali', items: 'Pan', donorName: 'Ana' });
+  });
+
+  expect(post).toHaveBeenCalledWith('/api/donations', { zone: 'Cali', items: 'Pan', donorName: 'Ana' });
+});
+
+test('createDonation posts the exact body including donorName', async () => {
+  post.mockResolvedValue({ data: donation });
+  const { result } = await renderLoaded();
+
+  await act(async () => {
+    await result.current.createDonation({ zone: 'Cali', items: 'Pan', donorName: 'Ana' });
+  });
+
+  expect(post).toHaveBeenCalledWith('/api/donations', { zone: 'Cali', items: 'Pan', donorName: 'Ana' });
 });

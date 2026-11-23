@@ -33,7 +33,7 @@ export const buildRecipeInput = (values: RecipeFormValues): RecipeFormResult => 
   const errors: RecipeFormErrors = {};
 
   if (!title) errors.title = 'Escribe el título de la receta';
-  if (values.ingredients.length === 0) errors.ingredients = 'Elige al menos un ingrediente';
+  if (values.ingredients.length === 0) errors.ingredients = 'Agrega al menos un ingrediente';
   if (steps.length === 0) errors.steps = 'Escribe al menos un paso de preparación';
   if (!Number.isInteger(minutes) || minutes < 1) errors.minutes = 'Indica el tiempo en minutos';
   if (!Number.isInteger(servings) || servings < 1) errors.servings = 'Indica el número de porciones';

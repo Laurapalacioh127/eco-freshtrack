@@ -6,7 +6,7 @@ const get = vi.fn();
 
 vi.mock('@/providers/AxiosProvider', () => ({ useAxios: () => ({ get }) }));
 
-const me = { id: 'u1', name: 'Valentina', email: 'v@correo.com', role: 'household', points: 120, kgSaved: 3.5 };
+const me = { id: 'u1', name: 'Valentina', email: 'v@correo.com', role: 'household' };
 
 test('loads the profile from /api/users/me', async () => {
   get.mockResolvedValue({ data: me });
@@ -17,7 +17,7 @@ test('loads the profile from /api/users/me', async () => {
 test('exposes the signed-in profile as me', async () => {
   get.mockResolvedValue({ data: me });
   const { result } = renderHook(() => useUsers(), { wrapper: UsersProvider });
-  await waitFor(() => expect(result.current.me?.points).toBe(120));
+  await waitFor(() => expect(result.current.me?.name).toBe('Valentina'));
 });
 
 test('exposes the error message when the request fails', async () => {

@@ -30,12 +30,6 @@ const steps = [
   },
 ];
 
-const stats = [
-  { value: '12.480', label: 'kg de comida salvada' },
-  { value: '1.246', label: 'donaciones entregadas' },
-  { value: '3.820', label: 'familias ayudadas' },
-];
-
 const HomePage = () => (
   <>
     <header className="mx-auto flex max-w-6xl items-center justify-between px-8 py-6">
@@ -119,7 +113,7 @@ const HomePage = () => (
       </div>
     </section>
 
-    <ImpactBand stats={stats} />
+    <ImpactBand />
 
     <footer className="px-8 py-8 text-center text-xs text-neutral-500">
       © 2026 FreshTrack · Universidad Icesi

@@ -1,7 +1,7 @@
 import { pool } from '../../db/db';
 import { User } from './user.types';
 
-const USER_COLUMNS = 'id, name, email, role, points, kg_saved::float8 AS "kgSaved"';
+const USER_COLUMNS = 'id, name, email, role';
 
 export const findAllUsersRepository = async (role?: string): Promise<User[]> => {
   const result = await pool.query<User>(

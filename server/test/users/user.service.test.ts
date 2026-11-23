@@ -51,7 +51,7 @@ test('getUserByIdService throws 404 when the repository returns undefined', asyn
 });
 
 test('getUserByIdService returns the user when it exists', async () => {
-  const user = { id: ID, name: 'Ana', email: 'a@x.co', role: 'household', points: 10, kgSaved: 2.4 };
+  const user = { id: ID, name: 'Ana', email: 'a@x.co', role: 'household' };
   findUserByIdRepository.mock.mockImplementation(async () => user);
 
   assert.deepEqual(await getUserByIdService(ID), user);

@@ -28,7 +28,7 @@ test('calls onSubmit with the values when the form is filled', async () => {
   render(<InventoryItemForm submitting={false} onSubmit={onSubmit} />);
 
   await user.type(screen.getByLabelText('Nombre del alimento'), 'Leche');
-  await user.type(screen.getByLabelText('Categoría'), 'Lácteos');
+  await user.selectOptions(screen.getByLabelText('Categoría'), 'Lácteos');
   await user.type(screen.getByLabelText('Cantidad'), '1 L');
   await user.type(screen.getByLabelText('Fecha de vencimiento'), '2030-01-15');
   await user.click(screen.getByRole('button', { name: 'Guardar en inventario ✓' }));
@@ -53,4 +53,34 @@ test('disables the name input while submitting', () => {
   render(<InventoryItemForm submitting onSubmit={vi.fn()} />);
 
   expect(screen.getByLabelText('Nombre del alimento')).toBeDisabled();
+});
+
+test('shows "Elige una categoría" when submitting without a category', async () => {
+  const user = userEvent.setup();
+  render(<InventoryItemForm submitting={false} onSubmit={vi.fn()} />);
+
+  await user.click(screen.getByRole('button', { name: 'Guardar en inventario ✓' }));
+
+  expect(screen.getByText('Elige una categoría')).toBeInTheDocument();
+});
+
+test('leaves the category empty for a legacy value outside the list', () => {
+  render(<InventoryItemForm submitting={false} initialValues={{ category: 'Plant-based foods' }} onSubmit={vi.fn()} />);
+
+  expect(screen.getByLabelText('Categoría')).toHaveValue('');
+});
+
+test('shows "Elige una categoría" when submitting without a category', async () => {
+  const user = userEvent.setup();
+  render(<InventoryItemForm submitting={false} onSubmit={vi.fn()} />);
+
+  await user.click(screen.getByRole('button', { name: 'Guardar en inventario ✓' }));
+
+  expect(screen.getByText('Elige una categoría')).toBeInTheDocument();
+});
+
+test('leaves the category empty for a legacy value outside the list', () => {
+  render(<InventoryItemForm submitting={false} initialValues={{ category: 'Plant-based foods' }} onSubmit={vi.fn()} />);
+
+  expect(screen.getByLabelText('Categoría')).toHaveValue('');
 });

@@ -2,19 +2,17 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useInventory } from '@/providers/InventoryProvider';
 import { useRecipes } from '@/providers/RecipesProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { buildRecipeInput, type RecipeFormErrors } from '@/utils/recipeForm';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { PhotoDropzone } from '@/components/PhotoDropzone/PhotoDropzone';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
-import { IngredientPicker } from '@/components/IngredientPicker/IngredientPicker';
+import { ChipInput } from '@/components/ChipInput/ChipInput';
 import { TextAreaField } from '@/components/TextAreaField/TextAreaField';
 
 const NewRecipePage = () => {
   const router = useRouter();
-  const { items } = useInventory();
   const [title, setTitle] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
   const [steps, setSteps] = useState('');
@@ -26,13 +24,6 @@ const NewRecipePage = () => {
   const { showToast } = useToast();
 
   const clearError = (field: keyof RecipeFormErrors) => setErrors((prev) => ({ ...prev, [field]: undefined }));
-
-  const toggleIngredient = (name: string) => {
-    clearError('ingredients');
-    setSelected((prev) =>
-      prev.includes(name) ? prev.filter((ingredient) => ingredient !== name) : [...prev, name]
-    );
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,10 +66,14 @@ const NewRecipePage = () => {
         error={errors.title}
         disabled={submitting}
       />
-      <IngredientPicker
-        options={items.map((item) => item.name)}
-        selected={selected}
-        onToggle={toggleIngredient}
+      <ChipInput
+        label="Ingredientes"
+        placeholder="Ej. 2 tomates"
+        values={selected}
+        onChange={(values) => {
+          setSelected(values);
+          clearError('ingredients');
+        }}
         error={errors.ingredients}
         disabled={submitting}
       />

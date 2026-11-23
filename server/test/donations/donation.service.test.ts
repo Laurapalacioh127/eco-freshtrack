@@ -36,7 +36,7 @@ test('getDonationsService passes the status to the repository', async () => {
 });
 
 test('getDonationSummaryService returns exactly the repository result', async () => {
-  const summary = { kgRescued: 48.6, dailyGoalPercent: 81, families: 24, deliveries: 7, pendingDonations: 1 };
+  const summary = { totalDonations: 5, pendingDonations: 1, approvedDonations: 2, completedDonations: 2 };
   findDonationSummaryRepository.mock.mockImplementation(async () => summary);
 
   assert.deepEqual(await getDonationSummaryService(USER), summary);

@@ -10,19 +10,16 @@ export interface Donation {
 }
 
 export interface DonationSummary {
-  kgRescued: number;
-  dailyGoalPercent: number;
-  families: number;
-  deliveries: number;
+  totalDonations: number;
   pendingDonations: number;
+  approvedDonations: number;
+  completedDonations: number;
 }
-
-export type DonationSummaryData = Omit<DonationSummary, 'pendingDonations'>;
 
 export const DONATION_STATUSES = ['pending', 'approved', 'completed'] as const;
 
 export interface CreateDonationDTO {
-  userId: string;
+  userId: string | null;
   donorName: string;
   zone: string;
   items: string;

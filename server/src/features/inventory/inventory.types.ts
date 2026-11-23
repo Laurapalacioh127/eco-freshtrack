@@ -1,3 +1,5 @@
+import { ProductCategory } from '../../utils/categories';
+
 export type InventoryStatus = 'ok' | 'soon' | 'expired';
 
 export interface InventoryItem {
@@ -14,7 +16,7 @@ export type InventoryItemData = Omit<InventoryItem, 'status'>;
 export interface CreateInventoryItemDTO {
   userId: string;
   name: string;
-  category: string;
+  category: ProductCategory;
   quantity: string;
   expiresOn: string;
 }

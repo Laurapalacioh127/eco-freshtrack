@@ -42,21 +42,13 @@ const AdminCatalogPage = () => {
         title="Catálogo maestro"
         subtitle="Gestiona productos, vida útil y sustitutos inteligentes."
         action={
-          <div className="flex gap-3">
-            <button
-              type="button"
-              className="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold"
-            >
-              Editar reglas de vencimiento
-            </button>
-            <button
-              type="button"
-              onClick={() => setModalOpen(true)}
-              className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
-            >
-              + Nuevo producto maestro
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setModalOpen(true)}
+            className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            + Nuevo producto maestro
+          </button>
         }
       />
 

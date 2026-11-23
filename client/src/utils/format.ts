@@ -1,6 +1,3 @@
-export const formatKg = (kg: number): string =>
-  kg.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-
 export const formatExpiry = (days: number): string => {
   if (days < 0) return 'Vencido';
   if (days === 0) return 'Vence hoy';

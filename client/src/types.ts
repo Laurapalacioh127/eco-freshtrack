@@ -1,5 +1,19 @@
 export type Portal = 'user' | 'admin';
 
+export const PRODUCT_CATEGORIES = [
+  'Frutas',
+  'Verduras',
+  'Lácteos',
+  'Carnes',
+  'Panadería',
+  'Granos',
+  'Bebidas',
+  'Congelados',
+  'Otros',
+] as const;
+
+export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
+
 export interface Product {
   id: string;
   name: string;
@@ -61,11 +75,10 @@ export interface Donation {
 }
 
 export interface DonationSummary {
-  kgRescued: number;
-  dailyGoalPercent: number;
-  families: number;
-  deliveries: number;
+  totalDonations: number;
   pendingDonations: number;
+  approvedDonations: number;
+  completedDonations: number;
 }
 
 export type UserRole = 'household' | 'admin';
@@ -75,8 +88,6 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  points: number;
-  kgSaved: number;
 }
 
 // Mirrors the server's AuthSession (POST /api/auth/login | register | refresh).

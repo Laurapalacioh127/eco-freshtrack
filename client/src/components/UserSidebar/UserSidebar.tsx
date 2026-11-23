@@ -1,8 +1,8 @@
 'use client';
 
 import { useLogout } from '@/hooks/useLogout';
+import { useDonations } from '@/providers/DonationsProvider';
 import { useUsers } from '@/providers/UsersProvider';
-import { formatKg } from '@/utils/format';
 import { Logo } from '@/components/logo/Logo';
 import { SidebarLink } from '@/components/SidebarLink/SidebarLink';
 
@@ -16,6 +16,7 @@ const links = [
 
 export const UserSidebar = () => {
   const { me } = useUsers();
+  const { summary } = useDonations();
   const handleLogout = useLogout('user');
 
   return (
@@ -32,7 +33,7 @@ export const UserSidebar = () => {
         </button>
         {me && (
           <div className="rounded-xl bg-ink p-3 text-white">
-            <p className="text-sm font-semibold">{formatKg(me.kgSaved)} kg salvados</p>
+            <p className="text-sm font-semibold">{summary?.completedDonations ?? 0} donaciones entregadas</p>
             <p className="text-xs text-white/70">¡Sigue así, {me.name.split(' ')[0]}!</p>
           </div>
         )}

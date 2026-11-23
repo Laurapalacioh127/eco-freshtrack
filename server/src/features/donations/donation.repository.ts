@@ -35,23 +35,17 @@ export const findDonationByIdRepository = async (
   return result.rows[0];
 };
 
-// Rescue stats are community-wide; only the pending count is scoped to the user.
+// userId null means all donations (admin). Otherwise only that user's donations.
 export const findDonationSummaryRepository = async (
   userId: string | null,
 ): Promise<DonationSummary> => {
   const result = await pool.query<DonationSummary>(
-    `WITH pending AS (
-       SELECT COUNT(*)::int AS n
-       FROM public.donations
-       WHERE status = 'pending' AND ($1::uuid IS NULL OR user_id = $1)
-     )
-     SELECT COALESCE(s.kg_rescued, 0)::float8 AS "kgRescued",
-       COALESCE(s.daily_goal_percent, 0) AS "dailyGoalPercent",
-       COALESCE(s.families, 0) AS families,
-       COALESCE(s.deliveries, 0) AS deliveries,
-       pending.n AS "pendingDonations"
-     FROM pending
-     LEFT JOIN public.donation_stats s ON s.id = 1`,
+    `SELECT COUNT(*)::int AS "totalDonations",
+       COUNT(*) FILTER (WHERE status = 'pending')::int AS "pendingDonations",
+       COUNT(*) FILTER (WHERE status = 'approved')::int AS "approvedDonations",
+       COUNT(*) FILTER (WHERE status = 'completed')::int AS "completedDonations"
+     FROM public.donations
+     WHERE ($1::uuid IS NULL OR user_id = $1)`,
     [userId],
   );
 

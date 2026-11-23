@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useInventory } from '@/providers/InventoryProvider';
+import { useDonations } from '@/providers/DonationsProvider';
 import { useUsers } from '@/providers/UsersProvider';
 import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { StatCard } from '@/components/StatCard/StatCard';
@@ -11,6 +12,7 @@ import { ImpactBanner } from '@/components/ImpactBanner/ImpactBanner';
 const UserHomePage = () => {
   const { items, summary, loading, error } = useInventory();
   const { me } = useUsers();
+  const { summary: donationSummary } = useDonations();
 
   if (loading) return <p>Cargando tu inventario…</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -62,7 +64,10 @@ const UserHomePage = () => {
         <span className="text-sm font-semibold text-brand">Ver mi lista →</span>
       </Link>
 
-      {me && <ImpactBanner kgSaved={me.kgSaved} points={me.points} />}
+      <ImpactBanner
+        totalDonations={donationSummary?.totalDonations ?? 0}
+        completedDonations={donationSummary?.completedDonations ?? 0}
+      />
     </div>
   );
 };

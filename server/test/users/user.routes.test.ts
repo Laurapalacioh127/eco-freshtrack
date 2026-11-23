@@ -7,7 +7,7 @@ import { authHeader, mockAuthModules } from '../helpers/auth';
 mockAuthModules();
 
 const ID = '00000000-0000-4000-8000-000000000601';
-const user = { id: ID, name: 'Ana', email: 'a@x.co', role: 'household', points: 10, kgSaved: 2.4 };
+const user = { id: ID, name: 'Ana', email: 'a@x.co', role: 'household' };
 const findAllUsersRepository = mock.fn(async () => [user]);
 const findUserByIdRepository = mock.fn(async () => user);
 
@@ -21,10 +21,16 @@ before(async () => {
   app = ((mod.default as unknown as { default?: Express }).default ?? mod.default) as Express;
 });
 
-test('GET /api/users/:id returns kgSaved as the number 2.4', async () => {
+test('GET /api/users/:id returns the user as id, name, email and role', async () => {
   const res = await request(app).get(`/api/users/${ID}`).set(authHeader('admin'));
 
-  assert.strictEqual(res.body.kgSaved, 2.4);
+  assert.deepEqual(res.body, { id: ID, name: 'Ana', email: 'a@x.co', role: 'household' });
+});
+
+test('GET /api/users/me returns exactly id, name, email and role', async () => {
+  const res = await request(app).get('/api/users/me').set(authHeader('household'));
+
+  assert.deepEqual(res.body, { id: ID, name: 'Ana', email: 'a@x.co', role: 'household' });
 });
 
 test('GET /api/users/:id returns 404 for a non-UUID id', async () => {

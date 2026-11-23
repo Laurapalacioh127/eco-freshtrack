@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import type { Recipe } from '@/types';
 import type { ModerationDecision } from '@/providers/RecipesProvider';
-import { Photo } from '@/components/Photo/Photo';
 import { TextAreaField } from '@/components/TextAreaField/TextAreaField';
 import { getFoodEmoji } from '@/utils/foodEmoji';
 
@@ -21,7 +20,6 @@ export const RecipeReviewPanel = ({ recipe, onApprove, onReject, pendingDecision
     <section className="flex flex-col gap-5 rounded-3xl bg-white p-6 shadow-soft">
       <div className="relative flex h-48 items-center justify-center overflow-hidden rounded-2xl bg-sun text-7xl">
         <span>{getFoodEmoji(recipe.title)}</span>
-        <Photo src={`/photos/recipes/${recipe.id}.jpg`} sizes="(min-width: 1024px) 700px, 100vw" />
       </div>
 
       <span className="w-fit rounded-full bg-sun px-3 py-1 text-xs font-bold">

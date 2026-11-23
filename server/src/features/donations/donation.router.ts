@@ -12,7 +12,7 @@ import {
 export const router = Router();
 
 router.get('/', getDonationsController);
-router.post('/', requireRole('household'), createDonationController);
+router.post('/', requireRole('household', 'admin'), createDonationController);
 router.get('/summary', getDonationSummaryController);
 router.get('/:id', getDonationByIdController);
 router.patch('/:id/status', requireRole('admin'), updateDonationStatusController);

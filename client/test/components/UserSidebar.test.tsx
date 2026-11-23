@@ -10,11 +10,18 @@ const logout = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ replace }), usePathname: () => '/user' }));
 vi.mock('@/providers/AuthProvider', () => ({ useAuth: () => ({ logout }) }));
 vi.mock('@/components/logo/Logo', () => ({ Logo: () => <span>FreshTrack</span> }));
-vi.mock('@/providers/UsersProvider', () => ({ useUsers: () => ({ me: null }) }));
+let me: { name: string } | null = null;
+let summary: { completedDonations: number } | null = null;
+vi.mock('@/providers/UsersProvider', () => ({ useUsers: () => ({ me }) }));
+vi.mock('@/providers/DonationsProvider', () => ({ useDonations: () => ({ summary }) }));
 
 beforeEach(() => {
   replace.mockReset();
   logout.mockReset();
+  me = null;
+  summary = null;
+  me = null;
+  summary = null;
 });
 
 const renderSidebar = () =>
@@ -42,4 +49,34 @@ test('shows the signed-out toast', async () => {
   });
 
   expect(screen.getByRole('status')).toHaveTextContent('Cerraste sesión');
+});
+
+test('shows the number of delivered donations from the summary', () => {
+  me = { name: 'Valentina Ríos' };
+  summary = { completedDonations: 3 };
+  renderSidebar();
+
+  expect(screen.getByText('3 donaciones entregadas')).toBeInTheDocument();
+});
+
+test('shows zero delivered donations while the summary is not loaded', () => {
+  me = { name: 'Valentina Ríos' };
+  renderSidebar();
+
+  expect(screen.getByText('0 donaciones entregadas')).toBeInTheDocument();
+});
+
+test('shows the number of delivered donations from the summary', () => {
+  me = { name: 'Valentina Ríos' };
+  summary = { completedDonations: 3 };
+  renderSidebar();
+
+  expect(screen.getByText('3 donaciones entregadas')).toBeInTheDocument();
+});
+
+test('shows zero delivered donations while the summary is not loaded', () => {
+  me = { name: 'Valentina Ríos' };
+  renderSidebar();
+
+  expect(screen.getByText('0 donaciones entregadas')).toBeInTheDocument();
 });

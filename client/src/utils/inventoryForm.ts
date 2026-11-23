@@ -1,4 +1,5 @@
 import type { AddInventoryItemInput } from '@/providers/InventoryProvider';
+import { isProductCategory } from '@/utils/categories';
 
 export interface InventoryFormValues {
   name: string;
@@ -25,8 +26,7 @@ export const buildInventoryItemInput = (values: InventoryFormValues): InventoryF
   if (!name) errors.name = 'Escribe el nombre del alimento';
   else if (name.length > 120) errors.name = 'Máximo 120 caracteres';
 
-  if (!category) errors.category = 'Indica la categoría';
-  else if (category.length > 60) errors.category = 'Máximo 60 caracteres';
+  if (!isProductCategory(category)) errors.category = 'Elige una categoría';
 
   if (!quantity) errors.quantity = 'Indica la cantidad';
   else if (quantity.length > 40) errors.quantity = 'Máximo 40 caracteres';

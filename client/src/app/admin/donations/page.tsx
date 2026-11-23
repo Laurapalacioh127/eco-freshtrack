@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import { CategoryChips } from '@/components/CategoryChips/CategoryChips';
 import { DonationCard } from '@/components/DonationCard/DonationCard';
+import { DonationModal } from '@/components/DonationModal/DonationModal';
 
 const filters: { name: string; status: DonationStatus | null }[] = [
   { name: 'Todas', status: null },
@@ -23,6 +24,7 @@ const AdminDonationsPage = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [filter, setFilter] = useState('Todas');
   const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   if (loading) return <p>Cargando donaciones…</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -60,7 +62,7 @@ const AdminDonationsPage = () => {
         title="Panel de donaciones"
         subtitle="Coordina ofertas, rutas y entregas en tiempo real."
         action={
-          <button type="button" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white">
+          <button type="button" onClick={() => setModalOpen(true)} className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white">
             + Registrar donación
           </button>
         }
@@ -87,6 +89,7 @@ const AdminDonationsPage = () => {
           onChangeStatus={(status) => changeStatus(donation.id, status)}
         />
       ))}
+      {modalOpen && <DonationModal onClose={() => setModalOpen(false)} />}
     </div>
   );
 };

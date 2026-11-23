@@ -7,6 +7,7 @@ import { ScanProvider, useScan } from '@/providers/ScanProvider';
 import { useInventory, type AddInventoryItemInput } from '@/providers/InventoryProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { normalizeBarcode } from '@/utils/barcode';
+import { toProductCategory } from '@/utils/categories';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ScannedProductCard } from '@/components/ScannedProductCard/ScannedProductCard';
 import { InventoryItemForm } from '@/components/InventoryItemForm/InventoryItemForm';
@@ -64,7 +65,7 @@ const ScanResultView = ({ validCode }: { validCode: boolean }) => {
       <ScannedProductCard product={product} />
       <InventoryItemForm
         submitting={submitting}
-        initialValues={{ name: product.name, category: product.category }}
+        initialValues={{ name: product.name, category: toProductCategory(product.category) }}
         onSubmit={handleSubmit}
       />
     </>

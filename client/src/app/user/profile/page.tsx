@@ -1,12 +1,14 @@
 'use client';
 
 import { useLogout } from '@/hooks/useLogout';
+import { useDonations } from '@/providers/DonationsProvider';
 import { useUsers } from '@/providers/UsersProvider';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ProfileCard } from '@/components/ProfileCard/ProfileCard';
 
 const ProfilePage = () => {
   const { me, loading, error } = useUsers();
+  const { summary } = useDonations();
   const handleLogout = useLogout('user');
 
   if (loading) return <p>Cargando tu perfil…</p>;
@@ -16,7 +18,7 @@ const ProfilePage = () => {
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <PageHeader eyebrow="TU CUENTA" title="Perfil" subtitle="Tu actividad e impacto en un solo lugar." />
-      <ProfileCard user={me} />
+      <ProfileCard user={me} summary={summary} />
       <div className="flex gap-3">
         <button
           type="button"

@@ -10,7 +10,7 @@ test('returns an error for each of the four blank fields', () => {
     ok: false,
     errors: {
       name: 'Escribe el nombre del alimento',
-      category: 'Indica la categoría',
+      category: 'Elige una categoría',
       quantity: 'Indica la cantidad',
       expiresOn: 'Elige la fecha de vencimiento',
     },
@@ -33,4 +33,16 @@ test('rejects a name longer than 120 characters', () => {
   const result = buildInventoryItemInput({ ...valid, name: 'a'.repeat(121) });
 
   expect(result).toEqual({ ok: false, errors: { name: 'Máximo 120 caracteres' } });
+});
+
+test('rejects a category outside the list', () => {
+  const result = buildInventoryItemInput({ ...valid, category: 'Despensa' });
+
+  expect(result).toEqual({ ok: false, errors: { category: 'Elige una categoría' } });
+});
+
+test('rejects a category outside the list', () => {
+  const result = buildInventoryItemInput({ ...valid, category: 'Despensa' });
+
+  expect(result).toEqual({ ok: false, errors: { category: 'Elige una categoría' } });
 });

@@ -10,7 +10,9 @@ import { hasId, upsertById } from '@/utils/upsertById';
 export interface CreateDonationInput {
   zone: string;
   items: string;
-  expiresLabel: string;
+  expiresLabel?: string;
+  // Only for admins registering a walk-in donation.
+  donorName?: string;
 }
 
 interface DonationsContextType {

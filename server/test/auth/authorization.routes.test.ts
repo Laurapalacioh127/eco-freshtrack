@@ -49,7 +49,7 @@ mock.module('../../src/features/products/product.repository', {
 
 const findAllUsersRepository = mock.fn<AsyncFn>(async () => []);
 const findUserByIdRepository = mock.fn<AsyncFn>(async (id: unknown) => ({
-  id, name: 'Hogar', email: 'hogar@x.co', role: 'household', points: 5, kgSaved: 1.5,
+  id, name: 'Hogar', email: 'hogar@x.co', role: 'household',
 }));
 mock.module('../../src/features/users/user.repository', {
   namedExports: { findAllUsersRepository, findUserByIdRepository },

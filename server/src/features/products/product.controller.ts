@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom';
 import { NextFunction, Request, Response } from 'express';
+import { readCategory } from '../../utils/categories';
 import { createProductService, getProductByIdService, getProductsService } from './product.service';
 
 const MAX_TEXT_LENGTH = 100;
@@ -18,7 +19,7 @@ const readText = (value: unknown, label: string): string => {
 export const createProductController = async (req: Request, res: Response) => {
   const body = (typeof req.body === 'object' && req.body !== null ? req.body : {}) as Record<string, unknown>;
   const name = readText(body.name, 'El nombre');
-  const category = readText(body.category, 'La categoría');
+  const category = readCategory(body, 'category', 'categoría');
   const { shelfLifeDays } = body;
 
   if (typeof shelfLifeDays !== 'number' || !Number.isInteger(shelfLifeDays) || shelfLifeDays <= 0) {

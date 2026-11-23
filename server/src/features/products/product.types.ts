@@ -1,3 +1,5 @@
+import { ProductCategory } from '../../utils/categories';
+
 export interface Product {
   id: string;
   name: string;
@@ -6,4 +8,4 @@ export interface Product {
   substitutes: string[];
 }
 
-export type CreateProductDTO = Omit<Product, 'id'>;
+export type CreateProductDTO = Omit<Product, 'id' | 'category'> & { category: ProductCategory };

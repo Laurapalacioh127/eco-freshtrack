@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { NODE_ENV, PORT } from './config';
 import { initDb } from './db/db';
-import { seedDb } from './db/seed';
+import { cleanupSeedDataDb, normalizeLegacyCategoriesDb } from './db/cleanup';
 import { errorsMiddleware } from './middlewares/errorsMiddleware';
 import { authMiddleware } from './middlewares/authMiddleware';
 import { router as authRouter } from './features/auth/auth.router';
@@ -43,7 +43,8 @@ if (NODE_ENV !== 'production' && NODE_ENV !== 'test') {
 
     try {
       await initDb();
-      await seedDb();
+      await cleanupSeedDataDb();
+      await normalizeLegacyCategoriesDb();
     } catch (error) {
       console.error('Database init failed', error);
     }

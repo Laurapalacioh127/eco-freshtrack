@@ -113,6 +113,7 @@ const DDL = [
     created_at TIMESTAMP NOT NULL DEFAULT now()
   )`,
   'CREATE INDEX IF NOT EXISTS idx_donations_user_id ON public.donations(user_id)',
+  // Deprecated: nothing reads donation_stats any more (summary is computed from donations).
   `CREATE TABLE IF NOT EXISTS public.donation_stats (
     id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
     kg_rescued NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (kg_rescued >= 0),

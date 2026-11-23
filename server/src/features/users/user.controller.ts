@@ -19,7 +19,7 @@ export const getUserByIdController = async (req: Request, res: Response, next: N
   }
 };
 
-// The caller's own profile (points, kg saved), available to every role.
+// The caller's own profile, available to every role.
 export const getMeController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.json(await getUserByIdService(getUserFromRequest(req).id));

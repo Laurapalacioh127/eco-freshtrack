@@ -8,7 +8,7 @@ test('collects every error when the form is empty', () => {
     ok: false,
     errors: {
       title: 'Escribe el título de la receta',
-      ingredients: 'Elige al menos un ingrediente',
+      ingredients: 'Agrega al menos un ingrediente',
       steps: 'Escribe al menos un paso de preparación',
       minutes: 'Indica el tiempo en minutos',
       servings: 'Indica el número de porciones',

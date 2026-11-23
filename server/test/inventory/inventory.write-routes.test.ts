@@ -35,6 +35,8 @@ beforeEach(() => {
 const body = { name: '  Leche ', category: 'Lácteos', quantity: '1 L', expiresOn: '2030-01-15' };
 const post = (payload: object, token: 'household' | 'admin' = 'household') =>
   request(app).post('/api/inventory').set(authHeader(token)).send(payload);
+const CATEGORY_MESSAGE =
+  'El campo "categoría" debe ser una de: Frutas, Verduras, Lácteos, Carnes, Panadería, Granos, Bebidas, Congelados, Otros';
 const DATE_MESSAGE = 'El campo "fecha de vencimiento" debe ser una fecha válida (AAAA-MM-DD)';
 
 test('POST /api/inventory returns 201 with the created item and its status', async () => {
@@ -77,7 +79,26 @@ test('POST /api/inventory returns 400 when the quantity is missing', async () =>
 test('POST /api/inventory returns 400 when the category is longer than 60 characters', async () => {
   const res = await post({ ...body, category: 'a'.repeat(61) });
 
-  assert.equal(res.body.message, 'El campo "categoría" no puede superar 60 caracteres');
+  assert.equal(res.body.message, CATEGORY_MESSAGE);
+});
+
+test('POST /api/inventory returns 400 for a category outside the list', async () => {
+  const res = await post({ ...body, category: 'Despensa' });
+
+  assert.equal(res.status, 400);
+  assert.equal(res.body.message, CATEGORY_MESSAGE);
+});
+
+test('POST /api/inventory does not call the repository for an invalid category', async () => {
+  await post({ ...body, category: 'Despensa' });
+
+  assert.equal(createInventoryItemRepository.mock.callCount(), 0);
+});
+
+test('POST /api/inventory returns 201 for the category Lácteos', async () => {
+  const res = await post({ ...body, category: 'Lácteos' });
+
+  assert.equal(res.status, 201);
 });
 
 test('POST /api/inventory returns 400 for a date in the wrong format', async () => {
