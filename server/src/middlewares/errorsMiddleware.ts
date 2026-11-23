@@ -5,7 +5,7 @@ export const errorsMiddleware = (
   err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   const boom = Boom.isBoom(err) ? err : Boom.internal();
   res.status(boom.output.statusCode).json(boom.output.payload);

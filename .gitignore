@@ -4,4 +4,5 @@ node_modules/
 dist/
 .next/
 .vercel/
-.DS_Store.claude/settings.local.json
+.DS_Store
+.claude/settings.local.json

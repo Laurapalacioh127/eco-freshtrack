@@ -6,7 +6,7 @@ export const findAllProductsRepository = async (): Promise<Product[]> => {
 };
 
 export const findProductByIdRepository = async (
-  id: string
+  id: string,
 ): Promise<Product | undefined> => {
   return productsMock.find((product) => product.id === id);
 };

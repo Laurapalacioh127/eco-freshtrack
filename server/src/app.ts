@@ -26,7 +26,7 @@ app.use('/api/users', usersRouter);
 // Error handling middleware
 app.use(errorsMiddleware);
 
-if (NODE_ENV !== 'production') {
+if (NODE_ENV !== 'production' && NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log('Server is running on http://localhost:' + PORT);
   });

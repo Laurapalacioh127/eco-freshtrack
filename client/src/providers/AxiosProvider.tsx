@@ -2,13 +2,14 @@
 
 import axios, { AxiosInstance } from 'axios';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
+import { API_URL } from '@/utils/config';
 
 const AxiosContext = createContext<AxiosInstance | null>(null);
 
 export const AxiosProvider = ({ children }: { children: ReactNode }) => {
   const instance = useMemo(() => {
     const inst = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || '',
+      baseURL: API_URL,
     });
 
     inst.interceptors.response.use(

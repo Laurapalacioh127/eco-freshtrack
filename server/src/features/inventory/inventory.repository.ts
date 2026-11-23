@@ -6,7 +6,7 @@ export const findAllInventoryRepository = async (): Promise<InventoryItemData[]>
 };
 
 export const findInventoryByIdRepository = async (
-  id: string
+  id: string,
 ): Promise<InventoryItemData | undefined> => {
   return inventoryMock.find((item) => item.id === id);
 };

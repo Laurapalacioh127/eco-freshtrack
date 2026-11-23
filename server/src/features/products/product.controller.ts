@@ -4,7 +4,7 @@ import { getProductByIdService, getProductsService } from './product.service';
 export const getProductsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const category =
@@ -18,7 +18,7 @@ export const getProductsController = async (
 export const getProductByIdController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     res.json(await getProductByIdService(String(req.params.id)));
