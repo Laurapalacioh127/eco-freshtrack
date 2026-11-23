@@ -5,17 +5,14 @@ const cards = [
   {
     title: 'Notificaciones',
     description: 'Alertas en vivo, urgencias y resúmenes diarios.',
-    buttonLabel: 'Configurar',
   },
   {
     title: 'Equipo y permisos',
     description: 'Roles, accesos y solicitudes pendientes.',
-    buttonLabel: 'Gestionar equipo',
   },
   {
     title: 'Zonas de operación',
     description: 'Rutas, bancos aliados y cobertura logística.',
-    buttonLabel: 'Editar zonas',
   },
 ];
 

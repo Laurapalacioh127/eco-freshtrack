@@ -6,7 +6,6 @@ import { useRecipes } from '@/providers/RecipesProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { buildRecipeInput, type RecipeFormErrors } from '@/utils/recipeForm';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
-import { PhotoDropzone } from '@/components/PhotoDropzone/PhotoDropzone';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
 import { ChipInput } from '@/components/ChipInput/ChipInput';
 import { TextAreaField } from '@/components/TextAreaField/TextAreaField';
@@ -54,7 +53,6 @@ const NewRecipePage = () => {
         title="Crear receta"
         subtitle="Convierte tus ingredientes en una idea que inspire."
       />
-      <PhotoDropzone />
       <AuthInput
         label="Título de la receta"
         placeholder="Ej. Ensalada fresca de aprovechamiento"

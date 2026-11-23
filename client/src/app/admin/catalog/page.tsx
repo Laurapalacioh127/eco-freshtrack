@@ -67,13 +67,12 @@ const AdminCatalogPage = () => {
               <th>CATEGORÍA</th>
               <th>VIDA ÚTIL PROMEDIO</th>
               <th>SUSTITUTOS</th>
-              <th>ACCIONES</th>
             </tr>
           </thead>
           <tbody>
             {visible.length === 0 && (
               <tr>
-                <td colSpan={5}>
+                <td colSpan={4}>
                   <EmptyState
                     title={
                       products.length === 0

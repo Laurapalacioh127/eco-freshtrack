@@ -22,12 +22,6 @@ const ProfilePage = () => {
       <div className="flex gap-3">
         <button
           type="button"
-          className="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold"
-        >
-          Preferencias
-        </button>
-        <button
-          type="button"
           onClick={handleLogout}
           className="rounded-full bg-rose-soft px-5 py-2.5 text-sm font-semibold text-rose-900"
         >

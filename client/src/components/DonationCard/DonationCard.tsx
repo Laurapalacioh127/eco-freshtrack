@@ -42,25 +42,20 @@ export const DonationCard = ({ donation, onChangeStatus, busy = false }: Donatio
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <button type="button" className="rounded-lg bg-brand shadow-glow-brand transition hover:-translate-y-0.5 py-2.5 text-sm font-semibold text-white">
-          Contactar por WhatsApp
+      {!onChangeStatus ? null : nextStep ? (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => onChangeStatus(nextStep.status)}
+          className="rounded-lg border border-black/10 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {busy ? 'Actualizando…' : nextStep.label}
         </button>
-        {!onChangeStatus ? null : nextStep ? (
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => onChangeStatus(nextStep.status)}
-            className="rounded-lg border border-black/10 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {busy ? 'Actualizando…' : nextStep.label}
-          </button>
-        ) : (
-          <p className="flex items-center justify-center rounded-lg bg-brand-soft py-2.5 text-sm font-semibold text-brand-dark">
-            Entrega completada
-          </p>
-        )}
-      </div>
+      ) : (
+        <p className="flex items-center justify-center rounded-lg bg-brand-soft py-2.5 text-sm font-semibold text-brand-dark">
+          Entrega completada
+        </p>
+      )}
     </article>
   );
 };
