@@ -4,27 +4,27 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import { useAxios } from './AxiosProvider';
 import type { User } from '@/types';
 
-interface UsersContextType {
-  users: User[];
-  household: User | null;
-  admin: User | null;
+interface UsersContextValue {
+  // The signed-in user's profile (points, kg saved) from GET /api/users/me.
+  me: User | null;
   loading: boolean;
   error: string | null;
 }
 
-const UsersContext = createContext<UsersContextType | null>(null);
+const UsersContext = createContext<UsersContextValue | null>(null);
 
+// Session-scoped: mount with key={user?.id ?? 'anonymous'} so the profile resets on logout.
 export const UsersProvider = ({ children }: { children: ReactNode }) => {
   const axios = useAxios();
-  const [users, setUsers] = useState<User[]>([]);
+  const [me, setMe] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const onInit = async () => {
       try {
-        const res = await axios.get<User[]>('/api/users');
-        setUsers(res.data);
+        const res = await axios.get<User>('/api/users/me');
+        setMe(res.data);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -35,14 +35,7 @@ export const UsersProvider = ({ children }: { children: ReactNode }) => {
     onInit();
   }, [axios]);
 
-  const household = users.find((user) => user.role === 'household') ?? null;
-  const admin = users.find((user) => user.role === 'admin') ?? null;
-
-  return (
-    <UsersContext.Provider value={{ users, household, admin, loading, error }}>
-      {children}
-    </UsersContext.Provider>
-  );
+  return <UsersContext.Provider value={{ me, loading, error }}>{children}</UsersContext.Provider>;
 };
 
 export const useUsers = () => {

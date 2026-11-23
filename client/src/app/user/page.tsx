@@ -9,7 +9,7 @@ import { ImpactBanner } from '@/components/ImpactBanner/ImpactBanner';
 
 const UserHomePage = () => {
   const { items, summary, loading, error } = useInventory();
-  const { household } = useUsers();
+  const { me } = useUsers();
 
   if (loading) return <p>Cargando tu inventario…</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -21,7 +21,7 @@ const UserHomePage = () => {
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">
-      <h1 className="text-4xl font-light">Hola, {household?.name.split(' ')[0]} 👋</h1>
+      <h1 className="text-4xl font-light">Hola, {me?.name.split(' ')[0]} 👋</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard label="Registrados" value={summary?.registered ?? 0} tone="blue" emoji="📦" />
@@ -58,7 +58,7 @@ const UserHomePage = () => {
         <span className="text-sm font-semibold text-brand">Ver mi lista →</span>
       </Link>
 
-      {household && <ImpactBanner kgSaved={household.kgSaved} points={household.points} />}
+      {me && <ImpactBanner kgSaved={me.kgSaved} points={me.points} />}
     </div>
   );
 };

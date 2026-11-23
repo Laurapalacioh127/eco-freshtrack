@@ -78,3 +78,20 @@ export interface User {
   points: number;
   kgSaved: number;
 }
+
+// Mirrors the server's AuthSession (POST /api/auth/login | register | refresh).
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+}
+
+export interface AuthSession {
+  user: AuthUser;
+  // Empty strings after register when email confirmation is on (no session yet)
+  accessToken: string;
+  refreshToken: string;
+  // Unix seconds, null when there is no session
+  expiresAt: number | null;
+}

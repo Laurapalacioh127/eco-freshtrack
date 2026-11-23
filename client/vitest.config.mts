@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    // With the default pools, Vitest 5 fails every file but the first with "failed to
+    // find the current suite" in setup.ts when several files run; vmThreads keeps
+    // per-file isolation and one jsdom per worker.
+    pool: 'vmThreads',
     setupFiles: ['./test/setup.ts'],
     globals: false,
   },

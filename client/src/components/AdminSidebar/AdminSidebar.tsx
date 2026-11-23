@@ -1,13 +1,17 @@
 //el contador rosa sale de las recetas pendientes
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/AuthProvider';
+import { loginPathFor } from '@/utils/authStorage';
 import { useRecipes } from '@/providers/RecipesProvider';
 import { Logo } from '@/components/logo/Logo';
 import { SidebarLink } from '@/components/SidebarLink/SidebarLink';
 
 export const AdminSidebar = () => {
   const { recipes } = useRecipes();
+  const { logout } = useAuth();
+  const router = useRouter();
   const pendingRecipes = recipes.filter((recipe) => recipe.status === 'pending').length;
 
   const links = [
@@ -17,6 +21,11 @@ export const AdminSidebar = () => {
     { href: '/admin/catalog', label: 'Catálogo maestro' },
     { href: '/admin/settings', label: 'Configuración' },
   ];
+
+  const handleLogout = () => {
+    logout();
+    router.replace(loginPathFor('admin'));
+  };
 
   return (
     <aside className="m-4 flex w-60 shrink-0 flex-col gap-6 rounded-[2rem] bg-ink p-5 text-white shadow-pop">
@@ -31,9 +40,9 @@ export const AdminSidebar = () => {
           <p className="text-sm font-semibold">Equipo FreshTrack</p>
           <p className="text-xs text-white/60">Operaciones · Cali</p>
         </div>
-        <Link href="/" className="px-3 text-sm font-medium text-white/70">
+        <button type="button" onClick={handleLogout} className="px-3 text-left text-sm font-medium text-white/70">
           Cerrar sesión
-        </Link>
+        </button>
       </div>
     </aside>
   );

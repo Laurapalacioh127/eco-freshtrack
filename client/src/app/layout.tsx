@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 import { AxiosProvider } from "@/providers/AxiosProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { ToastProvider } from "@/providers/ToastProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,7 +28,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.variable} ${bricolage.variable} antialiased`}>
-        <AxiosProvider>{children}</AxiosProvider>
+        <ToastProvider>
+          <AxiosProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </AxiosProvider>
+        </ToastProvider>
       </body>
     </html>
   );

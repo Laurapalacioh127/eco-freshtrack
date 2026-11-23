@@ -10,7 +10,7 @@ import { ImpactSummary } from '@/components/ImpactSummary/ImpactSummary';
 import { buildFeed } from '@/utils/feed';
 
 const AdminHomePage = () => {
-  const { admin } = useUsers();
+  const { me } = useUsers();
   const { donations, summary, loading: donationsLoading, error } = useDonations();
   const { recipes, loading: recipesLoading } = useRecipes();
   const { products } = useProducts();
@@ -26,7 +26,7 @@ const AdminHomePage = () => {
       <header className="flex items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold tracking-widest text-brand">CENTRO DE OPERACIONES</p>
-          <h1 className="text-4xl font-light">Buenos días, {admin?.name.split(' ')[0]}</h1>
+          <h1 className="text-4xl font-light">Buenos días, {me?.name.split(' ')[0]}</h1>
           <p className="mt-1 text-sm text-neutral-600">Esto es lo que está pasando en FreshTrack hoy.</p>
         </div>
         <span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-dark">

@@ -6,7 +6,7 @@ import { getInitials } from '@/utils/format';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 
 export const AdminTopbar = () => {
-  const { admin } = useUsers();
+  const { me } = useUsers();
   const [search, setSearch] = useState('');
 
   return (
@@ -19,13 +19,13 @@ export const AdminTopbar = () => {
           🔔
           <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-rose" />
         </span>
-        {admin && (
+        {me && (
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sun text-sm font-semibold">
-              {getInitials(admin.name)}
+              {getInitials(me.name)}
             </span>
             <div className="text-xs leading-tight">
-              <p className="font-semibold">{admin.name}</p>
+              <p className="font-semibold">{me.name}</p>
               <p className="text-neutral-500">Administradora</p>
             </div>
           </div>
