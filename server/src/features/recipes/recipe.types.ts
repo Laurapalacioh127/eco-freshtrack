@@ -13,3 +13,7 @@ export interface Recipe {
   ingredients: string[];
   steps: string[];
 }
+
+export const MODERATION_STATUSES = ['approved', 'rejected'] as const;
+
+export type ModerationStatus = (typeof MODERATION_STATUSES)[number];

@@ -31,14 +31,14 @@ beforeEach(() => {
 test('getRecipesService passes the status to the repository', async () => {
   findAllRecipesRepository.mock.mockImplementation(async () => []);
 
-  await getRecipesService('pending');
+  await getRecipesService(null, 'pending');
 
-  assert.deepEqual(findAllRecipesRepository.mock.calls[0].arguments, ['pending']);
+  assert.deepEqual(findAllRecipesRepository.mock.calls[0].arguments, [null, 'pending']);
 });
 
 test('getRecipeByIdService throws 404 for a non-UUID id without calling the repository', async () => {
   await assert.rejects(
-    () => getRecipeByIdService('r1'),
+    () => getRecipeByIdService(null, 'r1'),
     (error: { output?: { statusCode: number; payload: { message: string } } }) =>
       error.output?.statusCode === 404 && error.output.payload.message === 'Recipe not found',
   );
@@ -49,7 +49,7 @@ test('getRecipeByIdService throws 404 when the repository returns undefined', as
   findRecipeByIdRepository.mock.mockImplementation(async () => undefined);
 
   await assert.rejects(
-    () => getRecipeByIdService(ID),
+    () => getRecipeByIdService(null, ID),
     (error: { output?: { statusCode: number } }) => error.output?.statusCode === 404,
   );
 });
@@ -57,5 +57,5 @@ test('getRecipeByIdService throws 404 when the repository returns undefined', as
 test('getRecipeByIdService passes through a recipe with empty ingredients', async () => {
   findRecipeByIdRepository.mock.mockImplementation(async () => recipe);
 
-  assert.deepEqual((await getRecipeByIdService(ID)).ingredients, []);
+  assert.deepEqual((await getRecipeByIdService(null, ID)).ingredients, []);
 });

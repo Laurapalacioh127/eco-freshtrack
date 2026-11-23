@@ -5,3 +5,5 @@ export interface Product {
   shelfLifeDays: number;
   substitutes: string[];
 }
+
+export type CreateProductDTO = Omit<Product, 'id'>;

@@ -1,5 +1,5 @@
 import { pool } from '../../db/db';
-import { Recipe } from './recipe.types';
+import { Recipe, RecipeStatus } from './recipe.types';
 
 const RECIPE_SELECT = `
   WITH ing AS (
@@ -19,19 +19,42 @@ const RECIPE_SELECT = `
   LEFT JOIN ing ON ing.recipe_id = r.id
   LEFT JOIN st ON st.recipe_id = r.id`;
 
-export const findAllRecipesRepository = async (status?: string): Promise<Recipe[]> => {
+// viewerId null = admin (sees everything). Otherwise approved recipes plus the
+// viewer's own submissions in any status.
+const VISIBLE_TO = (param: string) =>
+  `(${param}::uuid IS NULL OR r.status = 'approved' OR r.author_id = ${param})`;
+
+export const findAllRecipesRepository = async (
+  viewerId: string | null,
+  status?: string,
+): Promise<Recipe[]> => {
   const result = await pool.query<Recipe>(
     `${RECIPE_SELECT}
-     WHERE ($1::text IS NULL OR r.status = $1)
+     WHERE ($1::text IS NULL OR r.status = $1) AND ${VISIBLE_TO('$2')}
      ORDER BY r.created_at, r.id`,
-    [status ?? null],
+    [status ?? null, viewerId],
   );
 
   return result.rows;
 };
 
-export const findRecipeByIdRepository = async (id: string): Promise<Recipe | undefined> => {
-  const result = await pool.query<Recipe>(`${RECIPE_SELECT} WHERE r.id = $1`, [id]);
+export const findRecipeByIdRepository = async (
+  viewerId: string | null,
+  id: string,
+): Promise<Recipe | undefined> => {
+  const result = await pool.query<Recipe>(
+    `${RECIPE_SELECT} WHERE r.id = $1 AND ${VISIBLE_TO('$2')}`,
+    [id, viewerId],
+  );
 
   return result.rows[0];
+};
+
+export const updateRecipeStatusRepository = async (
+  id: string,
+  status: RecipeStatus,
+): Promise<boolean> => {
+  const result = await pool.query('UPDATE public.recipes SET status = $2 WHERE id = $1', [id, status]);
+
+  return (result.rowCount ?? 0) > 0;
 };

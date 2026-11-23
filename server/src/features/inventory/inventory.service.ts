@@ -27,12 +27,15 @@ const withStatus = (item: InventoryItemData): InventoryItem => ({
   status: getStatus(item.expiresInDays),
 });
 
-export const getInventoryService = async (category?: string): Promise<InventoryItem[]> => {
-  return (await findAllInventoryRepository(category)).map(withStatus);
+export const getInventoryService = async (
+  userId: string,
+  category?: string,
+): Promise<InventoryItem[]> => {
+  return (await findAllInventoryRepository(userId, category)).map(withStatus);
 };
 
-export const getInventoryByIdService = async (id: string): Promise<InventoryItem> => {
-  const item = isUuid(id) ? await findInventoryByIdRepository(id) : undefined;
+export const getInventoryByIdService = async (userId: string, id: string): Promise<InventoryItem> => {
+  const item = isUuid(id) ? await findInventoryByIdRepository(userId, id) : undefined;
 
   if (!item) {
     throw Boom.notFound('Inventory item not found');
@@ -41,8 +44,8 @@ export const getInventoryByIdService = async (id: string): Promise<InventoryItem
   return withStatus(item);
 };
 
-export const getInventorySummaryService = async (): Promise<InventorySummary> => {
-  const items = (await findAllInventoryRepository()).map(withStatus);
+export const getInventorySummaryService = async (userId: string): Promise<InventorySummary> => {
+  const items = (await findAllInventoryRepository(userId)).map(withStatus);
 
   return {
     registered: items.length,
@@ -51,6 +54,6 @@ export const getInventorySummaryService = async (): Promise<InventorySummary> =>
   };
 };
 
-export const getShoppingListService = async (): Promise<ShoppingItem[]> => {
-  return findShoppingListRepository();
+export const getShoppingListService = async (userId: string): Promise<ShoppingItem[]> => {
+  return findShoppingListRepository(userId);
 };

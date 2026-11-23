@@ -4,6 +4,8 @@ import { NODE_ENV, PORT } from './config';
 import { initDb } from './db/db';
 import { seedDb } from './db/seed';
 import { errorsMiddleware } from './middlewares/errorsMiddleware';
+import { authMiddleware } from './middlewares/authMiddleware';
+import { router as authRouter } from './features/auth/auth.router';
 import { router as productsRouter } from './features/products/product.router';
 import { router as inventoryRouter } from './features/inventory/inventory.router';
 import { router as recipesRouter } from './features/recipes/recipe.router';
@@ -18,12 +20,16 @@ app.get('/', (req, res) => {
   res.send('FreshTrack API');
 });
 
-// Routes
-app.use('/api/products', productsRouter);
-app.use('/api/inventory', inventoryRouter);
-app.use('/api/recipes', recipesRouter);
-app.use('/api/donations', donationsRouter);
-app.use('/api/users', usersRouter);
+// Public routes
+app.use('/api/auth', authRouter);
+
+// Protected routes: authMiddleware is attached per router on its own prefix (never
+// globally), so it only runs for these paths. Role checks live in each router.
+app.use('/api/products', authMiddleware, productsRouter);
+app.use('/api/inventory', authMiddleware, inventoryRouter);
+app.use('/api/recipes', authMiddleware, recipesRouter);
+app.use('/api/donations', authMiddleware, donationsRouter);
+app.use('/api/users', authMiddleware, usersRouter);
 
 // Error handling middleware
 app.use(errorsMiddleware);

@@ -1,7 +1,8 @@
 import Boom from '@hapi/boom';
 import { isUuid } from '../../utils/isUuid';
-import { Product } from './product.types';
+import { CreateProductDTO, Product } from './product.types';
 import {
+  createProductRepository,
   findAllProductsRepository,
   findProductByIdRepository,
 } from './product.repository';
@@ -18,4 +19,8 @@ export const getProductByIdService = async (id: string): Promise<Product> => {
   }
 
   return product;
+};
+
+export const createProductService = async (data: CreateProductDTO): Promise<Product> => {
+  return createProductRepository(data);
 };

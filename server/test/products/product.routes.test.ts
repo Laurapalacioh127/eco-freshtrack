@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { before, beforeEach, mock, test } from 'node:test';
 import request from 'supertest';
 import type { Express } from 'express';
+import { authHeader, mockAuthModules } from '../helpers/auth';
+
+mockAuthModules();
 
 type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 
@@ -30,14 +33,14 @@ beforeEach(() => {
 test('GET /api/products returns the repository rows', async () => {
   findAllProductsRepository.mock.mockImplementation(async () => products);
 
-  const res = await request(app).get('/api/products');
+  const res = await request(app).get('/api/products').set(authHeader('household'));
 
   assert.equal(res.status, 200);
   assert.deepEqual(res.body, products);
 });
 
 test('GET /api/products/:id returns 404 for a non-UUID id', async () => {
-  const res = await request(app).get('/api/products/does-not-exist');
+  const res = await request(app).get('/api/products/does-not-exist').set(authHeader('household'));
 
   assert.equal(res.status, 404);
   assert.equal(res.body.message, 'Product not found');
@@ -48,7 +51,7 @@ test('GET /api/products returns 500 without leaking the database error', async (
     throw new Error('db down');
   });
 
-  const res = await request(app).get('/api/products');
+  const res = await request(app).get('/api/products').set(authHeader('household'));
 
   assert.equal(res.status, 500);
   assert.equal(JSON.stringify(res.body).includes('db down'), false);

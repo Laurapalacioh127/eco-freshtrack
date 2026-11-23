@@ -7,12 +7,19 @@ import {
   findDonationSummaryRepository,
 } from './donation.repository';
 
-export const getDonationsService = async (status?: string): Promise<Donation[]> => {
-  return findAllDonationsRepository(status);
+// scopeUserId: null for admins (all donations), the user's id for households.
+export const getDonationsService = async (
+  scopeUserId: string | null,
+  status?: string,
+): Promise<Donation[]> => {
+  return findAllDonationsRepository(scopeUserId, status);
 };
 
-export const getDonationByIdService = async (id: string): Promise<Donation> => {
-  const donation = isUuid(id) ? await findDonationByIdRepository(id) : undefined;
+export const getDonationByIdService = async (
+  scopeUserId: string | null,
+  id: string,
+): Promise<Donation> => {
+  const donation = isUuid(id) ? await findDonationByIdRepository(scopeUserId, id) : undefined;
 
   if (!donation) {
     throw Boom.notFound('Donation not found');
@@ -21,6 +28,8 @@ export const getDonationByIdService = async (id: string): Promise<Donation> => {
   return donation;
 };
 
-export const getDonationSummaryService = async (): Promise<DonationSummary> => {
-  return findDonationSummaryRepository();
+export const getDonationSummaryService = async (
+  scopeUserId: string | null,
+): Promise<DonationSummary> => {
+  return findDonationSummaryRepository(scopeUserId);
 };

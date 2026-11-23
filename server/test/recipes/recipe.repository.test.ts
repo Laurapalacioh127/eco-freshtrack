@@ -14,6 +14,7 @@ before(async () => {
 });
 
 const ID = '00000000-0000-4000-8000-000000000401';
+const USER = '00000000-0000-4000-8000-000000000999';
 
 beforeEach(() => {
   query.mock.resetCalls();
@@ -21,17 +22,17 @@ beforeEach(() => {
 });
 
 test('findAllRecipesRepository passes null when no status is given', async () => {
-  await findAllRecipesRepository();
+  await findAllRecipesRepository(null);
 
-  assert.deepEqual(query.mock.calls[0].arguments[1], [null]);
+  assert.deepEqual(query.mock.calls[0].arguments[1], [null, null]);
 });
 
 test('findRecipeByIdRepository passes the id as parameter', async () => {
-  await findRecipeByIdRepository(ID);
+  await findRecipeByIdRepository(USER, ID);
 
-  assert.deepEqual(query.mock.calls[0].arguments[1], [ID]);
+  assert.deepEqual(query.mock.calls[0].arguments[1], [ID, USER]);
 });
 
 test('findRecipeByIdRepository returns undefined when there are no rows', async () => {
-  assert.equal(await findRecipeByIdRepository(ID), undefined);
+  assert.equal(await findRecipeByIdRepository(null, ID), undefined);
 });

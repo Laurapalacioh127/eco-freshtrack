@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { before, mock, test } from 'node:test';
 import request from 'supertest';
 import type { Express } from 'express';
+import { authHeader, mockAuthModules } from '../helpers/auth';
+
+mockAuthModules();
 
 const findAllInventoryRepository = mock.fn(async () => [
   { id: '00000000-0000-4000-8000-000000000201', name: 'Leche', category: 'Lácteos', quantity: '1 L', expiresInDays: -2 },
@@ -22,21 +25,21 @@ before(async () => {
 });
 
 test('GET /api/inventory/summary is not captured by /:id', async () => {
-  const res = await request(app).get('/api/inventory/summary');
+  const res = await request(app).get('/api/inventory/summary').set(authHeader('household'));
 
   assert.equal(res.status, 200);
   assert.deepEqual(res.body, { registered: 2, expiringSoon: 1, expired: 1 });
 });
 
 test('GET /api/inventory/shopping-list is not captured by /:id', async () => {
-  const res = await request(app).get('/api/inventory/shopping-list');
+  const res = await request(app).get('/api/inventory/shopping-list').set(authHeader('household'));
 
   assert.equal(res.status, 200);
   assert.deepEqual(res.body, shopping);
 });
 
 test('GET /api/inventory/:id returns 404 for a non-UUID id', async () => {
-  const res = await request(app).get('/api/inventory/1');
+  const res = await request(app).get('/api/inventory/1').set(authHeader('household'));
 
   assert.equal(res.status, 404);
   assert.equal(res.body.message, 'Inventory item not found');

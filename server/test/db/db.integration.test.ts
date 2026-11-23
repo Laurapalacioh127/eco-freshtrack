@@ -17,7 +17,7 @@ test('findAllRecipesRepository returns only pending recipes after seeding', { sk
 
   await initDb();
   await seedDb();
-  const recipes = await findAllRecipesRepository('pending');
+  const recipes = await findAllRecipesRepository(null, 'pending');
 
   assert.ok(recipes.every((recipe) => recipe.status === 'pending'));
 });

@@ -21,6 +21,7 @@ before(async () => {
 });
 
 const ID = '00000000-0000-4000-8000-000000000201';
+const USER = '00000000-0000-4000-8000-000000000999';
 const item = (expiresInDays: number) => ({ id: ID, name: 'Leche', category: 'Lácteos', quantity: '1 L', expiresInDays });
 
 beforeEach(() => {
@@ -31,38 +32,38 @@ beforeEach(() => {
 test('getInventoryService marks an item expiring in -1 days as expired', async () => {
   findAllInventoryRepository.mock.mockImplementation(async () => [item(-1)]);
 
-  assert.equal((await getInventoryService())[0].status, 'expired');
+  assert.equal((await getInventoryService(USER))[0].status, 'expired');
 });
 
 test('getInventoryService marks an item expiring in 3 days as soon', async () => {
   findAllInventoryRepository.mock.mockImplementation(async () => [item(3)]);
 
-  assert.equal((await getInventoryService())[0].status, 'soon');
+  assert.equal((await getInventoryService(USER))[0].status, 'soon');
 });
 
 test('getInventoryService marks an item expiring in 4 days as ok', async () => {
   findAllInventoryRepository.mock.mockImplementation(async () => [item(4)]);
 
-  assert.equal((await getInventoryService())[0].status, 'ok');
+  assert.equal((await getInventoryService(USER))[0].status, 'ok');
 });
 
 test('getInventoryService passes the category to the repository', async () => {
   findAllInventoryRepository.mock.mockImplementation(async () => []);
 
-  await getInventoryService('Lácteos');
+  await getInventoryService(USER, 'Lácteos');
 
-  assert.deepEqual(findAllInventoryRepository.mock.calls[0].arguments, ['Lácteos']);
+  assert.deepEqual(findAllInventoryRepository.mock.calls[0].arguments, [USER, 'Lácteos']);
 });
 
 test('getInventorySummaryService counts registered, soon and expired items', async () => {
   findAllInventoryRepository.mock.mockImplementation(async () => [item(-1), item(1), item(3), item(10)]);
 
-  assert.deepEqual(await getInventorySummaryService(), { registered: 4, expiringSoon: 2, expired: 1 });
+  assert.deepEqual(await getInventorySummaryService(USER), { registered: 4, expiringSoon: 2, expired: 1 });
 });
 
 test('getInventoryByIdService throws 404 for a non-UUID id without calling the repository', async () => {
   await assert.rejects(
-    () => getInventoryByIdService('1'),
+    () => getInventoryByIdService(USER, '1'),
     (error: { output?: { statusCode: number; payload: { message: string } } }) =>
       error.output?.statusCode === 404 && error.output.payload.message === 'Inventory item not found',
   );
@@ -73,7 +74,7 @@ test('getInventoryByIdService throws 404 when the repository returns undefined',
   findInventoryByIdRepository.mock.mockImplementation(async () => undefined);
 
   await assert.rejects(
-    () => getInventoryByIdService(ID),
+    () => getInventoryByIdService(USER, ID),
     (error: { output?: { statusCode: number } }) => error.output?.statusCode === 404,
   );
 });
@@ -81,12 +82,12 @@ test('getInventoryByIdService throws 404 when the repository returns undefined',
 test('getInventoryByIdService returns the item with its status', async () => {
   findInventoryByIdRepository.mock.mockImplementation(async () => item(2));
 
-  assert.deepEqual(await getInventoryByIdService(ID), { ...item(2), status: 'soon' });
+  assert.deepEqual(await getInventoryByIdService(USER, ID), { ...item(2), status: 'soon' });
 });
 
 test('getShoppingListService returns the repository rows unchanged', async () => {
   const rows = [{ id: 'x', name: 'Pan', quantity: '1', reason: 'Se acabó', checked: false }];
   findShoppingListRepository.mock.mockImplementation(async () => rows);
 
-  assert.deepEqual(await getShoppingListService(), rows);
+  assert.deepEqual(await getShoppingListService(USER), rows);
 });

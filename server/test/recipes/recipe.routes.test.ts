@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { before, mock, test } from 'node:test';
 import request from 'supertest';
 import type { Express } from 'express';
+import { authHeader, mockAuthModules } from '../helpers/auth';
+
+mockAuthModules();
 
 const ID = '00000000-0000-4000-8000-000000000401';
 const recipe = {
@@ -23,19 +26,19 @@ before(async () => {
 });
 
 test('GET /api/recipes/:id returns ingredients in order', async () => {
-  const res = await request(app).get(`/api/recipes/${ID}`);
+  const res = await request(app).get(`/api/recipes/${ID}`).set(authHeader('household'));
 
   assert.deepEqual(res.body.ingredients, ['Papa', 'Cebolla', 'Sal']);
 });
 
 test('GET /api/recipes/:id returns steps in order', async () => {
-  const res = await request(app).get(`/api/recipes/${ID}`);
+  const res = await request(app).get(`/api/recipes/${ID}`).set(authHeader('household'));
 
   assert.deepEqual(res.body.steps, ['Pelar', 'Hervir']);
 });
 
 test('GET /api/recipes/:id returns 404 for a non-UUID id', async () => {
-  const res = await request(app).get('/api/recipes/r1');
+  const res = await request(app).get('/api/recipes/r1').set(authHeader('household'));
 
   assert.equal(res.status, 404);
   assert.equal(res.body.message, 'Recipe not found');

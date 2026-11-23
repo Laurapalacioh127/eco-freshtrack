@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { getUserFromRequest } from '../../middlewares/authMiddleware';
 import { getUserByIdService, getUsersService } from './user.service';
 
 export const getUsersController = async (req: Request, res: Response, next: NextFunction) => {
@@ -13,6 +14,15 @@ export const getUsersController = async (req: Request, res: Response, next: Next
 export const getUserByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.json(await getUserByIdService(String(req.params.id)));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// The caller's own profile (points, kg saved), available to every role.
+export const getMeController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.json(await getUserByIdService(getUserFromRequest(req).id));
   } catch (error) {
     next(error);
   }

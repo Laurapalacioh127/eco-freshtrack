@@ -4,31 +4,46 @@ import { Donation, DonationSummary } from './donation.types';
 const DONATION_COLUMNS =
   'id, donor_name AS "donorName", zone, items, expires_label AS "expiresLabel", status';
 
-export const findAllDonationsRepository = async (status?: string): Promise<Donation[]> => {
+// userId null means "no owner filter" (admin). Otherwise only that user's donations.
+export const findAllDonationsRepository = async (
+  userId: string | null,
+  status?: string,
+): Promise<Donation[]> => {
   const result = await pool.query<Donation>(
     `SELECT ${DONATION_COLUMNS}
      FROM public.donations
-     WHERE ($1::text IS NULL OR status = $1)
+     WHERE ($1::uuid IS NULL OR user_id = $1)
+       AND ($2::text IS NULL OR status = $2)
      ORDER BY created_at, id`,
-    [status ?? null],
+    [userId, status ?? null],
   );
 
   return result.rows;
 };
 
-export const findDonationByIdRepository = async (id: string): Promise<Donation | undefined> => {
+export const findDonationByIdRepository = async (
+  userId: string | null,
+  id: string,
+): Promise<Donation | undefined> => {
   const result = await pool.query<Donation>(
-    `SELECT ${DONATION_COLUMNS} FROM public.donations WHERE id = $1`,
-    [id],
+    `SELECT ${DONATION_COLUMNS}
+     FROM public.donations
+     WHERE id = $1 AND ($2::uuid IS NULL OR user_id = $2)`,
+    [id, userId],
   );
 
   return result.rows[0];
 };
 
-export const findDonationSummaryRepository = async (): Promise<DonationSummary> => {
+// Rescue stats are community-wide; only the pending count is scoped to the user.
+export const findDonationSummaryRepository = async (
+  userId: string | null,
+): Promise<DonationSummary> => {
   const result = await pool.query<DonationSummary>(
     `WITH pending AS (
-       SELECT COUNT(*)::int AS n FROM public.donations WHERE status = 'pending'
+       SELECT COUNT(*)::int AS n
+       FROM public.donations
+       WHERE status = 'pending' AND ($1::uuid IS NULL OR user_id = $1)
      )
      SELECT COALESCE(s.kg_rescued, 0)::float8 AS "kgRescued",
        COALESCE(s.daily_goal_percent, 0) AS "dailyGoalPercent",
@@ -37,6 +52,7 @@ export const findDonationSummaryRepository = async (): Promise<DonationSummary> 
        pending.n AS "pendingDonations"
      FROM pending
      LEFT JOIN public.donation_stats s ON s.id = 1`,
+    [userId],
   );
 
   return result.rows[0];
