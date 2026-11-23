@@ -37,6 +37,7 @@ const TABLES = [
   'recipe_steps',
   'donations',
   'donation_stats',
+  'notifications',
 ] as const;
 
 const DDL = [
@@ -121,6 +122,15 @@ const DDL = [
     families INTEGER NOT NULL DEFAULT 0 CHECK (families >= 0),
     deliveries INTEGER NOT NULL DEFAULT 0 CHECK (deliveries >= 0)
   )`,
+  `CREATE TABLE IF NOT EXISTS public.notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    type TEXT NOT NULL CHECK (type IN ('recipe-submitted','recipe-reviewed','donation-created','donation-status-changed')),
+    message TEXT NOT NULL,
+    read BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT now()
+  )`,
+  'CREATE INDEX IF NOT EXISTS idx_notifications_user_id_created_at ON public.notifications(user_id, created_at DESC)',
   ...TABLES.map((table) => `ALTER TABLE public.${table} ENABLE ROW LEVEL SECURITY`),
 ];
 

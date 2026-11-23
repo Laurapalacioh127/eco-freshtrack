@@ -6,6 +6,16 @@ type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 const findAllRecipesRepository = mock.fn<AsyncFn>();
 const findRecipeByIdRepository = mock.fn<AsyncFn>();
 
+mock.module('../../src/features/notifications/notification.service', {
+  namedExports: {
+    notifyRoleService: mock.fn(async () => {}),
+    notifyRecipeAuthorService: mock.fn(async () => {}),
+    notifyDonationOwnerService: mock.fn(async () => {}),
+    getNotificationsService: mock.fn(),
+    markNotificationAsReadService: mock.fn(),
+  },
+});
+
 mock.module('../../src/features/recipes/recipe.repository', {
   namedExports: { findAllRecipesRepository, findRecipeByIdRepository },
 });

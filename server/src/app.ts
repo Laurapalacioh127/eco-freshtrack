@@ -11,6 +11,7 @@ import { router as productsRouter } from './features/products/product.router';
 import { router as inventoryRouter } from './features/inventory/inventory.router';
 import { router as recipesRouter } from './features/recipes/recipe.router';
 import { router as donationsRouter } from './features/donations/donation.router';
+import { router as notificationsRouter } from './features/notifications/notification.router';
 import { router as usersRouter } from './features/users/user.router';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/inventory', authMiddleware, inventoryRouter);
 app.use('/api/recipes', authMiddleware, recipesRouter);
 app.use('/api/donations', authMiddleware, donationsRouter);
 app.use('/api/users', authMiddleware, usersRouter);
+app.use('/api/notifications', authMiddleware, notificationsRouter);
 
 // Error handling middleware
 app.use(errorsMiddleware);

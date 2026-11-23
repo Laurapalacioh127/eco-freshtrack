@@ -12,6 +12,16 @@ type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 const summary = { totalDonations: 5, pendingDonations: 1, approvedDonations: 2, completedDonations: 2 };
 const findDonationSummaryRepository = mock.fn<AsyncFn>(async () => summary);
 
+mock.module('../../src/features/notifications/notification.service', {
+  namedExports: {
+    notifyRoleService: mock.fn(async () => {}),
+    notifyRecipeAuthorService: mock.fn(async () => {}),
+    notifyDonationOwnerService: mock.fn(async () => {}),
+    getNotificationsService: mock.fn(),
+    markNotificationAsReadService: mock.fn(),
+  },
+});
+
 mock.module('../../src/features/donations/donation.repository', {
   namedExports: {
     findAllDonationsRepository: mock.fn(),

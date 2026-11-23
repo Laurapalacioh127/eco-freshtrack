@@ -12,3 +12,6 @@ export const getInitials = (name: string): string =>
     .slice(0, 2)
     .join('')
     .toUpperCase();
+
+export const formatNotificationDate = (iso: string): string =>
+  new Date(iso).toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });

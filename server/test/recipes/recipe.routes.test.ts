@@ -15,6 +15,16 @@ const recipe = {
 const findAllRecipesRepository = mock.fn(async () => [recipe]);
 const findRecipeByIdRepository = mock.fn(async () => recipe);
 
+mock.module('../../src/features/notifications/notification.service', {
+  namedExports: {
+    notifyRoleService: mock.fn(async () => {}),
+    notifyRecipeAuthorService: mock.fn(async () => {}),
+    notifyDonationOwnerService: mock.fn(async () => {}),
+    getNotificationsService: mock.fn(),
+    markNotificationAsReadService: mock.fn(),
+  },
+});
+
 mock.module('../../src/features/recipes/recipe.repository', {
   namedExports: { findAllRecipesRepository, findRecipeByIdRepository },
 });

@@ -12,6 +12,10 @@ export const REALTIME = {
     submitted: 'recipe-submitted',
     reviewed: 'recipe-reviewed',
   },
+  notifications: {
+    channel: 'notifications',
+    created: 'notification-created',
+  },
 } as const;
 
 export type BroadcastHandlers = Record<string, (payload: unknown) => void>;

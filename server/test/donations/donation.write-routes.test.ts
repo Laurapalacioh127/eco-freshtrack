@@ -16,6 +16,16 @@ const donation = {
 const createDonationRepository = mock.fn<AsyncFn>(async () => donation);
 const updateDonationStatusRepository = mock.fn<AsyncFn>(async () => ({ ...donation, status: 'approved' }));
 
+mock.module('../../src/features/notifications/notification.service', {
+  namedExports: {
+    notifyRoleService: mock.fn(async () => {}),
+    notifyRecipeAuthorService: mock.fn(async () => {}),
+    notifyDonationOwnerService: mock.fn(async () => {}),
+    getNotificationsService: mock.fn(),
+    markNotificationAsReadService: mock.fn(),
+  },
+});
+
 mock.module('../../src/features/donations/donation.repository', {
   namedExports: {
     createDonationRepository,

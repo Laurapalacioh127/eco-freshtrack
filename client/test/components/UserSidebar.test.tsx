@@ -13,6 +13,15 @@ vi.mock('@/components/logo/Logo', () => ({ Logo: () => <span>FreshTrack</span> }
 let me: { name: string } | null = null;
 let summary: { completedDonations: number } | null = null;
 vi.mock('@/providers/UsersProvider', () => ({ useUsers: () => ({ me }) }));
+vi.mock('@/providers/NotificationsProvider', () => ({
+  useNotifications: () => ({
+    notifications: [],
+    unreadCount: 0,
+    loading: false,
+    error: null,
+    markAsRead: vi.fn(),
+  }),
+}));
 vi.mock('@/providers/DonationsProvider', () => ({ useDonations: () => ({ summary }) }));
 
 beforeEach(() => {

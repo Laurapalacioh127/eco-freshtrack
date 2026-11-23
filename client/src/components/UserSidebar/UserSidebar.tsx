@@ -4,6 +4,7 @@ import { useLogout } from '@/hooks/useLogout';
 import { useDonations } from '@/providers/DonationsProvider';
 import { useUsers } from '@/providers/UsersProvider';
 import { Logo } from '@/components/logo/Logo';
+import { NotificationBell } from '@/components/NotificationBell/NotificationBell';
 import { SidebarLink } from '@/components/SidebarLink/SidebarLink';
 
 const links = [
@@ -21,7 +22,10 @@ export const UserSidebar = () => {
 
   return (
     <aside className="m-4 flex w-56 shrink-0 flex-col gap-6 rounded-[2rem] bg-white p-5 shadow-soft">
-      <Logo />
+      <div className="flex items-center justify-between">
+        <Logo />
+        <NotificationBell align="start" />
+      </div>
       <nav className="flex flex-col gap-1">
         {links.map((link) => (
           <SidebarLink key={link.href} {...link} variant="light" />

@@ -13,6 +13,16 @@ const findAllInventoryRepository = mock.fn<AsyncFn>(async () => []);
 const findInventoryByIdRepository = mock.fn<AsyncFn>(async () => undefined);
 const createInventoryItemRepository = mock.fn<AsyncFn>();
 const findShoppingListRepository = mock.fn<AsyncFn>(async () => []);
+mock.module('../../src/features/notifications/notification.service', {
+  namedExports: {
+    notifyRoleService: mock.fn(async () => {}),
+    notifyRecipeAuthorService: mock.fn(async () => {}),
+    notifyDonationOwnerService: mock.fn(async () => {}),
+    getNotificationsService: mock.fn(),
+    markNotificationAsReadService: mock.fn(),
+  },
+});
+
 mock.module('../../src/features/inventory/inventory.repository', {
   namedExports: { createInventoryItemRepository, findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
 });

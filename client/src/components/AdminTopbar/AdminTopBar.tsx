@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useUsers } from '@/providers/UsersProvider';
 import { getInitials } from '@/utils/format';
+import { NotificationBell } from '@/components/NotificationBell/NotificationBell';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 
 export const AdminTopbar = () => {
@@ -15,10 +16,7 @@ export const AdminTopbar = () => {
         <SearchBox placeholder="Buscar donaciones, recetas…" value={search} onChange={setSearch} />
       </div>
       <div className="flex items-center gap-4">
-        <span className="relative text-lg" aria-label="Notificaciones">
-          🔔
-          <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-rose" />
-        </span>
+        <NotificationBell />
         {me && (
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sun text-sm font-semibold">

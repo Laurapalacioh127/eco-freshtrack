@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
 import { DonationsProvider } from '@/providers/DonationsProvider';
 import { InventoryProvider } from '@/providers/InventoryProvider';
+import { NotificationsProvider } from '@/providers/NotificationsProvider';
 import { RecipesProvider } from '@/providers/RecipesProvider';
 import { UsersProvider } from '@/providers/UsersProvider';
 import { PrivateRoute } from '@/components/PrivateRoute/PrivateRoute';
@@ -20,12 +21,14 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         <InventoryProvider key={sessionKey}>
           <DonationsProvider key={sessionKey}>
             <RecipesProvider key={sessionKey}>
-              <div className="flex min-h-screen">
-                <Suspense fallback={<aside className="m-4 w-56 shrink-0 rounded-[2rem] bg-white shadow-soft" />}>
-                  <UserSidebar />
-                </Suspense>
-                <main className="flex-1 p-8">{children}</main>
-              </div>
+              <NotificationsProvider key={sessionKey}>
+                <div className="flex min-h-screen">
+                  <Suspense fallback={<aside className="m-4 w-56 shrink-0 rounded-[2rem] bg-white shadow-soft" />}>
+                    <UserSidebar />
+                  </Suspense>
+                  <main className="flex-1 p-8">{children}</main>
+                </div>
+              </NotificationsProvider>
             </RecipesProvider>
           </DonationsProvider>
         </InventoryProvider>

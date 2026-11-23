@@ -12,6 +12,10 @@ export const REALTIME = {
     submitted: 'recipe-submitted',
     reviewed: 'recipe-reviewed',
   },
+  notifications: {
+    channel: 'notifications',
+    created: 'notification-created',
+  },
 } as const;
 
 // Fire-and-forget: callers do not await it, and a failed broadcast (including a

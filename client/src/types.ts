@@ -113,3 +113,17 @@ export interface ScannedProduct {
   category: string;
   imageUrl: string | null;
 }
+
+export type NotificationType =
+  | 'recipe-submitted'
+  | 'recipe-reviewed'
+  | 'donation-created'
+  | 'donation-status-changed';
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}
