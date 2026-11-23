@@ -6,6 +6,7 @@ import { seedDb } from './db/seed';
 import { errorsMiddleware } from './middlewares/errorsMiddleware';
 import { authMiddleware } from './middlewares/authMiddleware';
 import { router as authRouter } from './features/auth/auth.router';
+import { router as barcodeRouter } from './features/barcode/barcode.router';
 import { router as productsRouter } from './features/products/product.router';
 import { router as inventoryRouter } from './features/inventory/inventory.router';
 import { router as recipesRouter } from './features/recipes/recipe.router';
@@ -25,6 +26,8 @@ app.use('/api/auth', authRouter);
 
 // Protected routes: authMiddleware is attached per router on its own prefix (never
 // globally), so it only runs for these paths. Role checks live in each router.
+// Mounted before /api/products so the barcode lookup is not shadowed and auth runs once.
+app.use('/api/products/barcode', authMiddleware, barcodeRouter);
 app.use('/api/products', authMiddleware, productsRouter);
 app.use('/api/inventory', authMiddleware, inventoryRouter);
 app.use('/api/recipes', authMiddleware, recipesRouter);

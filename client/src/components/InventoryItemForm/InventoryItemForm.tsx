@@ -3,19 +3,20 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { AddInventoryItemInput } from '@/providers/InventoryProvider';
-import { buildInventoryItemInput, type InventoryFormErrors } from '@/utils/inventoryForm';
+import { buildInventoryItemInput, type InventoryFormErrors, type InventoryFormValues } from '@/utils/inventoryForm';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
 
 interface InventoryItemFormProps {
   submitting: boolean;
+  initialValues?: Partial<InventoryFormValues>;
   onSubmit: (input: AddInventoryItemInput) => void | Promise<void>;
 }
 
-export const InventoryItemForm = ({ submitting, onSubmit }: InventoryItemFormProps) => {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [expiresOn, setExpiresOn] = useState('');
+export const InventoryItemForm = ({ submitting, initialValues, onSubmit }: InventoryItemFormProps) => {
+  const [name, setName] = useState(initialValues?.name ?? '');
+  const [category, setCategory] = useState(initialValues?.category ?? '');
+  const [quantity, setQuantity] = useState(initialValues?.quantity ?? '');
+  const [expiresOn, setExpiresOn] = useState(initialValues?.expiresOn ?? '');
   const [errors, setErrors] = useState<InventoryFormErrors>({});
 
   const handleSubmit = async (e: React.FormEvent) => {

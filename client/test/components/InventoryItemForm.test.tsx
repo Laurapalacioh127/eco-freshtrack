@@ -41,3 +41,10 @@ test('disables the button and shows Guardando while submitting', () => {
 
   expect(screen.getByRole('button', { name: 'Guardando…' })).toBeDisabled();
 });
+
+test('prefills the fields from initialValues', () => {
+  render(<InventoryItemForm submitting={false} initialValues={{ name: 'Leche', category: 'Lácteos' }} onSubmit={vi.fn()} />);
+
+  expect(screen.getByLabelText('Nombre del alimento')).toHaveValue('Leche');
+  expect(screen.getByLabelText('Categoría')).toHaveValue('Lácteos');
+});

@@ -12,3 +12,5 @@ export const DB_PASSWORD = process.env.DB_PASSWORD;
 export const DB_SSL = process.env.DB_SSL !== 'false';
 export const SUPABASE_URL = process.env.SUPABASE_URL || '';
 export const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
+export const OPEN_FOOD_FACTS_URL = process.env.OPEN_FOOD_FACTS_URL || 'https://world.openfoodfacts.org';
+export const OPEN_FOOD_FACTS_TIMEOUT_MS = Number(process.env.OPEN_FOOD_FACTS_TIMEOUT_MS) || 5000;

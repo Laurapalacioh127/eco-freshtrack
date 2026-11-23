@@ -95,3 +95,10 @@ export interface AuthSession {
   // Unix seconds, null when there is no session
   expiresAt: number | null;
 }
+
+export interface ScannedProduct {
+  code: string;
+  name: string;
+  category: string;
+  imageUrl: string | null;
+}

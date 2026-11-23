@@ -1,58 +1,100 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ScanProvider, useScan } from '@/providers/ScanProvider';
+import { useInventory, type AddInventoryItemInput } from '@/providers/InventoryProvider';
+import { useToast } from '@/providers/ToastProvider';
+import { normalizeBarcode } from '@/utils/barcode';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
-import { AuthInput } from '@/components/AuthInput/AuthInput';
+import { ScannedProductCard } from '@/components/ScannedProductCard/ScannedProductCard';
+import { InventoryItemForm } from '@/components/InventoryItemForm/InventoryItemForm';
 
-const ScanResultPage = () => {
-  const [name, setName] = useState('Tomates cherry');
-  const [quantity, setQuantity] = useState('350 g');
-  const [category, setCategory] = useState('Verduras');
-  const [expiry, setExpiry] = useState('En 3 días');
+const secondaryLink = 'rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold';
+
+const ScanResultView = ({ validCode }: { validCode: boolean }) => {
+  const router = useRouter();
+  const { product, loading, error, retry } = useScan();
+  const { addItem } = useInventory();
+  const { showToast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (input: AddInventoryItemInput) => {
+    setSubmitting(true);
+    try {
+      await addItem(input);
+      showToast('Alimento agregado a tu inventario', 'success');
+      router.push('/user/inventory');
+    } catch (err) {
+      showToast((err as Error).message);
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) return <p>Buscando producto…</p>;
+
+  if (error || !product) {
+    return (
+      <div role="alert" className="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-sm">
+        <p className="text-red-600">{error ?? 'No encontramos el producto'}</p>
+        <div className="flex flex-wrap gap-3">
+          {validCode && (
+            <button
+              type="button"
+              onClick={retry}
+              className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
+            >
+              Reintentar
+            </button>
+          )}
+          <Link href="/user/scan" className={secondaryLink}>
+            Volver a escanear
+          </Link>
+          <Link href="/user/scan/manual" className={secondaryLink}>
+            Agregar manualmente
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
-      <Link href="/user/scan" className="text-sm font-semibold">
-        ← Volver al escáner
-      </Link>
-      <PageHeader
-        eyebrow="ANÁLISIS COMPLETADO"
-        title="¡Alimento detectado!"
-        subtitle="Revisa la información antes de guardarla."
+    <>
+      <ScannedProductCard product={product} />
+      <InventoryItemForm
+        submitting={submitting}
+        initialValues={{ name: product.name, category: product.category }}
+        onSubmit={handleSubmit}
       />
-
-      <div className="rounded-2xl bg-white p-5 shadow-sm">
-        <span className="rounded-full bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand-dark">
-          94% de confianza
-        </span>
-        <p className="mt-3 text-2xl font-light">{name}</p>
-        <p className="text-sm text-brand">Maduro, consumir en 3 días</p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <AuthInput label="Nombre del producto" placeholder="Tomates cherry" value={name} onChange={setName} />
-        <AuthInput label="Cantidad" placeholder="350 g" value={quantity} onChange={setQuantity} />
-        <AuthInput label="Categoría" placeholder="Verduras" value={category} onChange={setCategory} />
-        <AuthInput label="Fecha de vencimiento sugerida" placeholder="En 3 días" value={expiry} onChange={setExpiry} />
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          href="/user/inventory"
-          className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-5 py-2.5 text-sm font-semibold text-white"
-        >
-          Guardar en inventario ✓
-        </Link>
-        <Link
-          href="/user/scan"
-          className="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold"
-        >
-          Volver a escanear
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
+
+const ScanResultContent = () => {
+  const code = normalizeBarcode(useSearchParams().get('code') ?? '');
+
+  return (
+    <ScanProvider code={code}>
+      <div className="flex max-w-xl flex-col gap-6">
+        <Link href="/user/scan" className="text-sm font-semibold">
+          ← Volver al escáner
+        </Link>
+        <PageHeader
+          eyebrow="PRODUCTO ESCANEADO"
+          title="Revisa el producto"
+          subtitle="Agrega la cantidad y la fecha de vencimiento antes de guardarlo."
+        />
+        <ScanResultView validCode={code !== null} />
+      </div>
+    </ScanProvider>
+  );
+};
+
+const ScanResultPage = () => (
+  <Suspense fallback={<p>Cargando…</p>}>
+    <ScanResultContent />
+  </Suspense>
+);
 
 export default ScanResultPage;
