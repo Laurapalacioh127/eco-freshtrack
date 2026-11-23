@@ -37,7 +37,7 @@ test('buildRecipeInput reads the leading number from free-text time and servings
 test('buildRecipeInput asks for at least one ingredient', () => {
   const result = buildRecipeInput({ title: 'Sopa', ingredients: [], steps: 'Hervir', minutes: '20', servings: '2' });
 
-  expect(result).toEqual({ ok: false, message: 'Elige al menos un ingrediente' });
+  expect(result).toEqual({ ok: false, errors: { ingredients: 'Elige al menos un ingrediente' } });
 });
 
 test('buildFeed shows the newest pending donation first', () => {

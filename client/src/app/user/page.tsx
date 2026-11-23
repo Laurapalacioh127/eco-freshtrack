@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useInventory } from '@/providers/InventoryProvider';
 import { useUsers } from '@/providers/UsersProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { StatCard } from '@/components/StatCard/StatCard';
 import { ExpiringItemCard } from '@/components/ExpiringItemCard/ExpiringItemCard';
 import { ImpactBanner } from '@/components/ImpactBanner/ImpactBanner';
@@ -39,6 +40,9 @@ const UserHomePage = () => {
             Ver inventario →
           </Link>
         </div>
+        {expiringSoon.length === 0 && (
+          <EmptyState title="Nada por vencer" description="Tus alimentos están frescos por ahora." />
+        )}
         <div className="grid gap-4 md:grid-cols-3">
           {expiringSoon.map((item) => (
             <ExpiringItemCard key={item.id} item={item} />

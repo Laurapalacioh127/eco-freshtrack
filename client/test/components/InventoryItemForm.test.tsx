@@ -48,3 +48,9 @@ test('prefills the fields from initialValues', () => {
   expect(screen.getByLabelText('Nombre del alimento')).toHaveValue('Leche');
   expect(screen.getByLabelText('Categoría')).toHaveValue('Lácteos');
 });
+
+test('disables the name input while submitting', () => {
+  render(<InventoryItemForm submitting onSubmit={vi.fn()} />);
+
+  expect(screen.getByLabelText('Nombre del alimento')).toBeDisabled();
+});

@@ -44,6 +44,7 @@ export const InventoryItemForm = ({ submitting, initialValues, onSubmit }: Inven
         value={name}
         onChange={setName}
         error={errors.name}
+        disabled={submitting}
       />
       <AuthInput
         label="Categoría"
@@ -51,6 +52,7 @@ export const InventoryItemForm = ({ submitting, initialValues, onSubmit }: Inven
         value={category}
         onChange={setCategory}
         error={errors.category}
+        disabled={submitting}
       />
       <AuthInput
         label="Cantidad"
@@ -58,6 +60,7 @@ export const InventoryItemForm = ({ submitting, initialValues, onSubmit }: Inven
         value={quantity}
         onChange={setQuantity}
         error={errors.quantity}
+        disabled={submitting}
       />
       <AuthInput
         label="Fecha de vencimiento"
@@ -66,6 +69,7 @@ export const InventoryItemForm = ({ submitting, initialValues, onSubmit }: Inven
         value={expiresOn}
         onChange={setExpiresOn}
         error={errors.expiresOn}
+        disabled={submitting}
       />
 
       <div className="flex gap-3">

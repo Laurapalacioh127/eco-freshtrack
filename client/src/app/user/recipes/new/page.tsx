@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useInventory } from '@/providers/InventoryProvider';
 import { useRecipes } from '@/providers/RecipesProvider';
 import { useToast } from '@/providers/ToastProvider';
-import { buildRecipeInput } from '@/utils/recipeForm';
+import { buildRecipeInput, type RecipeFormErrors } from '@/utils/recipeForm';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { PhotoDropzone } from '@/components/PhotoDropzone/PhotoDropzone';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
@@ -21,22 +21,29 @@ const NewRecipePage = () => {
   const [minutes, setMinutes] = useState('');
   const [servings, setServings] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<RecipeFormErrors>({});
   const { submitRecipe } = useRecipes();
   const { showToast } = useToast();
 
-  const toggleIngredient = (name: string) =>
+  const clearError = (field: keyof RecipeFormErrors) => setErrors((prev) => ({ ...prev, [field]: undefined }));
+
+  const toggleIngredient = (name: string) => {
+    clearError('ingredients');
     setSelected((prev) =>
       prev.includes(name) ? prev.filter((ingredient) => ingredient !== name) : [...prev, name]
     );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = buildRecipeInput({ title, ingredients: selected, steps, minutes, servings });
 
     if (!result.ok) {
-      showToast(result.message);
+      setErrors(result.errors);
       return;
     }
+
+    setErrors({});
 
     setSubmitting(true);
     try {
@@ -50,7 +57,7 @@ const NewRecipePage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-xl flex-col gap-5">
+    <form onSubmit={handleSubmit} noValidate className="flex max-w-xl flex-col gap-5">
       <PageHeader
         eyebrow="COMPARTE CON LA COMUNIDAD"
         title="Crear receta"
@@ -61,22 +68,54 @@ const NewRecipePage = () => {
         label="Título de la receta"
         placeholder="Ej. Ensalada fresca de aprovechamiento"
         value={title}
-        onChange={setTitle}
+        onChange={(value) => {
+          setTitle(value);
+          clearError('title');
+        }}
+        error={errors.title}
+        disabled={submitting}
       />
       <IngredientPicker
         options={items.map((item) => item.name)}
         selected={selected}
         onToggle={toggleIngredient}
+        error={errors.ingredients}
+        disabled={submitting}
       />
       <TextAreaField
         label="Pasos de preparación"
         placeholder="1. Lava y corta los ingredientes…"
         value={steps}
-        onChange={setSteps}
+        onChange={(value) => {
+          setSteps(value);
+          clearError('steps');
+        }}
+        error={errors.steps}
+        disabled={submitting}
       />
       <div className="grid grid-cols-2 gap-4">
-        <AuthInput label="Tiempo" placeholder="20 minutos" value={minutes} onChange={setMinutes} />
-        <AuthInput label="Porciones" placeholder="2 personas" value={servings} onChange={setServings} />
+        <AuthInput
+          label="Tiempo"
+          placeholder="20 minutos"
+          value={minutes}
+          onChange={(value) => {
+            setMinutes(value);
+            clearError('minutes');
+          }}
+          error={errors.minutes}
+          disabled={submitting}
+        />
+        <AuthInput
+          label="Porciones"
+          placeholder="2 personas"
+          value={servings}
+          onChange={(value) => {
+            setServings(value);
+            clearError('servings');
+          }}
+          error={errors.servings}
+          disabled={submitting}
+        />
       </div>
       <button
         type="submit"

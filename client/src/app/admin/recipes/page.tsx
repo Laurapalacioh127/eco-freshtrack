@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ModerationDecision, useRecipes } from '@/providers/RecipesProvider';
 import { useToast } from '@/providers/ToastProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { RecipeQueueItem } from '@/components/RecipeQueueItem/RecipeQueueItem';
 import { RecipeReviewPanel } from '@/components/RecipeReviewPanel/RecipeReviewPanel';
@@ -11,7 +12,7 @@ const AdminRecipesPage = () => {
   const { recipes, loading, error, moderateRecipe } = useRecipes();
   const { showToast } = useToast();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [busy, setBusy] = useState<{ id: string; decision: ModerationDecision } | null>(null);
 
   if (loading) return <p>Cargando recetas…</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -21,14 +22,14 @@ const AdminRecipesPage = () => {
   const selected = queue.find((recipe) => recipe.id === selectedId) ?? queue[0];
 
   const decide = async (id: string, decision: ModerationDecision) => {
-    setBusyId(id);
+    setBusy({ id, decision });
     try {
       await moderateRecipe(id, decision);
       showToast(decision === 'approved' ? 'Receta aprobada' : 'Receta rechazada', 'success');
     } catch (err) {
       showToast((err as Error).message);
     } finally {
-      setBusyId(null);
+      setBusy(null);
     }
   };
 
@@ -40,9 +41,10 @@ const AdminRecipesPage = () => {
         subtitle={`${queue.length} recetas esperan revisión nutricional y editorial.`}
       />
       {!selected ? (
-        <p className="rounded-2xl bg-brand-soft p-6 text-sm">
-          No hay recetas pendientes de revisión. ¡Buen trabajo!
-        </p>
+        <EmptyState
+          title="No hay recetas pendientes de revisión"
+          description="¡Buen trabajo! Las nuevas recetas aparecerán aquí en vivo."
+        />
       ) : (
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
           <aside className="flex flex-col gap-2 rounded-2xl border border-black/5 bg-white p-3">
@@ -59,7 +61,7 @@ const AdminRecipesPage = () => {
           <RecipeReviewPanel
             key={selected.id}
             recipe={selected}
-            busy={busyId === selected.id}
+            pendingDecision={busy?.id === selected.id ? busy.decision : null}
             onApprove={() => decide(selected.id, 'approved')}
             onReject={() => decide(selected.id, 'rejected')}
           />

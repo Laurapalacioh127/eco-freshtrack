@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useProducts } from '@/providers/ProductsProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import { CategoryChips } from '@/components/CategoryChips/CategoryChips';
@@ -78,6 +79,19 @@ const AdminCatalogPage = () => {
             </tr>
           </thead>
           <tbody>
+            {visible.length === 0 && (
+              <tr>
+                <td colSpan={5}>
+                  <EmptyState
+                    title={
+                      products.length === 0
+                        ? 'El catálogo está vacío'
+                        : 'No hay productos que coincidan con tu búsqueda.'
+                    }
+                  />
+                </td>
+              </tr>
+            )}
             {visible.map((product) => (
               <ProductRow key={product.id} product={product} />
             ))}

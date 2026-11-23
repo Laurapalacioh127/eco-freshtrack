@@ -72,6 +72,7 @@ export const AuthForm = ({ portal }: { portal: Portal }) => {
       return;
     }
 
+    showToast('Sesión iniciada', 'success');
     router.replace(homePathFor(portal));
   };
 
@@ -84,6 +85,7 @@ export const AuthForm = ({ portal }: { portal: Portal }) => {
       return;
     }
 
+    showToast('¡Tu cuenta está lista!', 'success');
     router.replace(homePathFor(portal));
   };
 

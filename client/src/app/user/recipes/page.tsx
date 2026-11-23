@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRecipes } from '@/providers/RecipesProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { FeaturedRecipe } from '@/components/FeaturedRecipe/FeaturedRecipe';
 import { RecipeCard } from '@/components/RecipeCard/RecipeCard';
@@ -30,6 +31,14 @@ const RecipesPage = () => {
           </Link>
         }
       />
+      {approved.length === 0 && (
+        <EmptyState
+          title="Aún no hay recetas publicadas"
+          description="Crea la primera y compártela con la comunidad."
+          actionHref="/user/recipes/new"
+          actionLabel="+ Crear mi receta"
+        />
+      )}
       {featured && <FeaturedRecipe recipe={featured} />}
       <div className="grid gap-4 md:grid-cols-3">
         {approved.map((recipe) => (

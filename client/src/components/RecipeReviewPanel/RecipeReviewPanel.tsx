@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Recipe } from '@/types';
+import type { ModerationDecision } from '@/providers/RecipesProvider';
 import { Photo } from '@/components/Photo/Photo';
 import { TextAreaField } from '@/components/TextAreaField/TextAreaField';
 import { getFoodEmoji } from '@/utils/foodEmoji';
@@ -10,10 +11,10 @@ interface RecipeReviewPanelProps {
   recipe: Recipe;
   onApprove: () => void;
   onReject: () => void;
-  busy?: boolean;
+  pendingDecision?: ModerationDecision | null;
 }
 
-export const RecipeReviewPanel = ({ recipe, onApprove, onReject, busy = false }: RecipeReviewPanelProps) => {
+export const RecipeReviewPanel = ({ recipe, onApprove, onReject, pendingDecision = null }: RecipeReviewPanelProps) => {
   const [notes, setNotes] = useState('');
 
   return (
@@ -69,18 +70,20 @@ export const RecipeReviewPanel = ({ recipe, onApprove, onReject, busy = false }:
         <button
           type="button"
           onClick={() => onApprove()}
-          disabled={busy}
+          disabled={pendingDecision != null}
+          aria-busy={pendingDecision != null}
           className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-glow-brand transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Aprobar receta ✓
+          {pendingDecision === 'approved' ? 'Aprobando…' : 'Aprobar receta ✓'}
         </button>
         <button
           type="button"
           onClick={() => onReject()}
-          disabled={busy}
+          disabled={pendingDecision != null}
+          aria-busy={pendingDecision != null}
           className="rounded-full bg-rose-soft px-5 py-2.5 text-sm font-bold text-rose-900 transition hover:bg-rose disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Rechazar con observaciones
+          {pendingDecision === 'rejected' ? 'Rechazando…' : 'Rechazar con observaciones'}
         </button>
       </div>
     </section>

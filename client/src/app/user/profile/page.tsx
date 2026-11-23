@@ -1,21 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/providers/AuthProvider';
-import { loginPathFor } from '@/utils/authStorage';
+import { useLogout } from '@/hooks/useLogout';
 import { useUsers } from '@/providers/UsersProvider';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ProfileCard } from '@/components/ProfileCard/ProfileCard';
 
 const ProfilePage = () => {
   const { me, loading, error } = useUsers();
-  const { logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = () => {
-    logout();
-    router.replace(loginPathFor('user'));
-  };
+  const handleLogout = useLogout('user');
 
   if (loading) return <p>Cargando tu perfil…</p>;
   if (error) return <p role="alert" className="text-red-600">{error}</p>;

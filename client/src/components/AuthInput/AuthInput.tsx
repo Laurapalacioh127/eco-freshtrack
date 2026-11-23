@@ -42,7 +42,7 @@ export const AuthInput = ({
         }`}
       />
       {error && (
-        <span id={errorId} className="font-normal text-rose-dark">
+        <span id={errorId} role="alert" className="font-normal text-rose-dark">
           {error}
         </span>
       )}

@@ -9,12 +9,14 @@ import { useToast } from '@/providers/ToastProvider';
 import { formatExpiry } from '@/utils/format';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
 import { TextAreaField } from '@/components/TextAreaField/TextAreaField';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { DonationItemRow } from '@/components/DonationItemRow/DonationItemRow';
 
 const DonatePage = () => {
   const router = useRouter();
   const { items, loading, error } = useInventory();
   const [place, setPlace] = useState('');
+  const [placeError, setPlaceError] = useState('');
   const [note, setNote] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { createDonation } = useDonations();
@@ -37,7 +39,7 @@ const DonatePage = () => {
     }
 
     if (!place.trim()) {
-      showToast('Indica el lugar de recogida');
+      setPlaceError('Indica el lugar de recogida');
       return;
     }
 
@@ -60,6 +62,7 @@ const DonatePage = () => {
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className="flex max-w-md flex-col gap-5 rounded-3xl bg-white p-6 shadow-sm"
     >
       <h1 className="text-2xl font-light">¿Donar estos {donable.length} productos?</h1>
@@ -68,9 +71,10 @@ const DonatePage = () => {
       </p>
 
       {donable.length === 0 ? (
-        <p className="rounded-2xl bg-brand-soft p-4 text-sm">
-          No tienes alimentos por vencer para donar en este momento.
-        </p>
+        <EmptyState
+          title="No tienes alimentos por vencer para donar"
+          description="Vuelve cuando tengas productos próximos a vencer."
+        />
       ) : (
         <div className="flex flex-col gap-3 rounded-2xl bg-sun/40 p-4">
           {donable.map((item) => (
@@ -83,13 +87,19 @@ const DonatePage = () => {
         label="Lugar de recogida"
         placeholder="Calle 8 #34-20, Cali"
         value={place}
-        onChange={setPlace}
+        onChange={(value) => {
+          setPlace(value);
+          setPlaceError('');
+        }}
+        error={placeError || undefined}
+        disabled={submitting}
       />
       <TextAreaField
         label="Nota opcional"
         placeholder="Indicaciones para la recolección"
         value={note}
         onChange={setNote}
+        disabled={submitting}
       />
 
       <div className="flex gap-3">

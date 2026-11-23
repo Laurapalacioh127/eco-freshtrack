@@ -1,8 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/providers/AuthProvider';
-import { loginPathFor } from '@/utils/authStorage';
+import { useLogout } from '@/hooks/useLogout';
 import { useUsers } from '@/providers/UsersProvider';
 import { formatKg } from '@/utils/format';
 import { Logo } from '@/components/logo/Logo';
@@ -18,13 +16,7 @@ const links = [
 
 export const UserSidebar = () => {
   const { me } = useUsers();
-  const { logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = () => {
-    logout();
-    router.replace(loginPathFor('user'));
-  };
+  const handleLogout = useLogout('user');
 
   return (
     <aside className="m-4 flex w-56 shrink-0 flex-col gap-6 rounded-[2rem] bg-white p-5 shadow-soft">

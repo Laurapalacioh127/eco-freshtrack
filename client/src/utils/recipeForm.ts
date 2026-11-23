@@ -8,7 +8,9 @@ export interface RecipeFormValues {
   servings: string;
 }
 
-export type RecipeFormResult = { ok: true; input: SubmitRecipeInput } | { ok: false; message: string };
+export type RecipeFormErrors = Partial<Record<'title' | 'ingredients' | 'steps' | 'minutes' | 'servings', string>>;
+
+export type RecipeFormResult = { ok: true; input: SubmitRecipeInput } | { ok: false; errors: RecipeFormErrors };
 
 // Accepts free text such as "20 minutos" or "2 personas" and keeps the leading number.
 const parseCount = (value: string): number => {
@@ -28,12 +30,15 @@ export const buildRecipeInput = (values: RecipeFormValues): RecipeFormResult => 
   const steps = parseSteps(values.steps);
   const minutes = parseCount(values.minutes);
   const servings = parseCount(values.servings);
+  const errors: RecipeFormErrors = {};
 
-  if (!title) return { ok: false, message: 'Escribe el título de la receta' };
-  if (values.ingredients.length === 0) return { ok: false, message: 'Elige al menos un ingrediente' };
-  if (steps.length === 0) return { ok: false, message: 'Escribe al menos un paso de preparación' };
-  if (!Number.isInteger(minutes) || minutes < 1) return { ok: false, message: 'Indica el tiempo en minutos' };
-  if (!Number.isInteger(servings) || servings < 1) return { ok: false, message: 'Indica el número de porciones' };
+  if (!title) errors.title = 'Escribe el título de la receta';
+  if (values.ingredients.length === 0) errors.ingredients = 'Elige al menos un ingrediente';
+  if (steps.length === 0) errors.steps = 'Escribe al menos un paso de preparación';
+  if (!Number.isInteger(minutes) || minutes < 1) errors.minutes = 'Indica el tiempo en minutos';
+  if (!Number.isInteger(servings) || servings < 1) errors.servings = 'Indica el número de porciones';
+
+  if (Object.keys(errors).length > 0) return { ok: false, errors };
 
   return { ok: true, input: { title, minutes, servings, ingredients: values.ingredients, steps } };
 };

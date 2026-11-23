@@ -1,8 +1,7 @@
 'use client';
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-import { isAxiosError } from 'axios';
-import { useAxios } from './AxiosProvider';
+import { ApiError, useAxios } from './AxiosProvider';
 import { useAuth } from './AuthProvider';
 import type { Recipe } from '@/types';
 import { REALTIME, subscribeToBroadcast } from '@/utils/realtime';
@@ -52,7 +51,7 @@ export const RecipesProvider = ({ children }: { children: ReactNode }) => {
         const res = await axios.get<Recipe>(`/api/recipes/${payload.id}`);
         setRecipes((prev) => upsertById(prev, res.data));
       } catch (err) {
-        if (isAxiosError(err) && err.response?.status === 404) {
+        if (err instanceof ApiError && err.status === 404) {
           setRecipes((prev) => prev.filter((recipe) => recipe.id !== payload.id));
         }
       }

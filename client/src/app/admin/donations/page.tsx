@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDonations } from '@/providers/DonationsProvider';
 import { useToast } from '@/providers/ToastProvider';
 import type { DonationStatus } from '@/types';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import { CategoryChips } from '@/components/CategoryChips/CategoryChips';
@@ -70,8 +71,13 @@ const AdminDonationsPage = () => {
           <SearchBox placeholder="Buscar por donante o zona" value={search} onChange={setSearch} />
         </div>
       </div>
-      {visible.length === 0 && (
-        <p className="text-sm text-neutral-600">No hay donaciones que coincidan con tu búsqueda.</p>
+      {donations.length === 0 ? (
+        <EmptyState
+          title="Aún no hay donaciones"
+          description="Las nuevas donaciones aparecerán aquí en tiempo real."
+        />
+      ) : (
+        visible.length === 0 && <EmptyState title="No hay donaciones que coincidan con tu búsqueda." />
       )}
       {visible.map((donation) => (
         <DonationCard

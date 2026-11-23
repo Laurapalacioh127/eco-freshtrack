@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useInventory } from '@/providers/InventoryProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ShoppingRow } from '@/components/ShoppingRow/ShoppingRow';
 
@@ -29,6 +30,12 @@ const ShoppingListPage = () => {
         <p>Revisamos {items.length} productos y tus últimas compras.</p>
       </div>
       <p className="text-sm font-semibold">Compra sugerida · {pending} productos pendientes</p>
+      {shoppingList.length === 0 && (
+        <EmptyState
+          title="Tu lista de mercado está vacía"
+          description="Te avisaremos cuando algo se esté agotando."
+        />
+      )}
       <div className="flex flex-col gap-3">
         {shoppingList.map((item) => (
           <ShoppingRow

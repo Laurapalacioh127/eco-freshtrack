@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { AxiosError, AxiosHeaders } from 'axios';
 import { beforeEach, expect, test, vi } from 'vitest';
+import { ApiError } from '@/providers/AxiosProvider';
 import { RecipesProvider, useRecipes } from '@/providers/RecipesProvider';
 import type { BroadcastHandlers } from '@/utils/realtime';
 
@@ -12,7 +12,10 @@ let role: 'admin' | 'household' = 'admin';
 
 // One stable object, like the memoized instance from the real AxiosProvider.
 const axiosMock = { get, patch };
-vi.mock('@/providers/AxiosProvider', () => ({ useAxios: () => axiosMock }));
+vi.mock('@/providers/AxiosProvider', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/providers/AxiosProvider')>()),
+  useAxios: () => axiosMock,
+}));
 vi.mock('@/providers/AuthProvider', () => ({ useAuth: () => ({ user: { id: 'u1', role } }) }));
 vi.mock('@/utils/realtime', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/utils/realtime')>()),
@@ -27,10 +30,7 @@ const recipe = {
   ingredientsAvailable: 2, ingredientsTotal: 2, status: 'pending', ingredients: ['Papa'], steps: ['Hervir'],
 };
 
-const notFound = () =>
-  new AxiosError('Recipe not found', '404', undefined, undefined, {
-    status: 404, statusText: 'Not Found', data: {}, headers: {}, config: { headers: new AxiosHeaders() },
-  });
+const notFound = () => new ApiError('Receta no encontrada', 404);
 
 const emit = async (event: string, payload: unknown) => {
   const handler = subscriptions.at(-1)?.handlers[event];

@@ -4,6 +4,7 @@ import { useDonations } from '@/providers/DonationsProvider';
 import { useProducts } from '@/providers/ProductsProvider';
 import { useRecipes } from '@/providers/RecipesProvider';
 import { useUsers } from '@/providers/UsersProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { StatCard } from '@/components/StatCard/StatCard';
 import { FeedItem } from '@/components/FeedItem/FeedItem';
 import { ImpactSummary } from '@/components/ImpactSummary/ImpactSummary';
@@ -12,11 +13,11 @@ import { buildFeed } from '@/utils/feed';
 const AdminHomePage = () => {
   const { me } = useUsers();
   const { donations, summary, loading: donationsLoading, error } = useDonations();
-  const { recipes, loading: recipesLoading } = useRecipes();
+  const { recipes, loading: recipesLoading, error: recipesError } = useRecipes();
   const { products } = useProducts();
 
   if (donationsLoading || recipesLoading) return <p>Cargando centro de operaciones…</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (error || recipesError) return <p className="text-red-600">{error ?? recipesError}</p>;
 
   const feed = buildFeed(donations, recipes);
   const pendingRecipes = recipes.filter((recipe) => recipe.status === 'pending').length;
@@ -35,9 +36,9 @@ const AdminHomePage = () => {
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
-      <StatCard label="Donaciones pendientes" value={summary?.pendingDonations ?? 0} tone="yellow" emoji="🎁" />
-<StatCard label="Recetas por revisar" value={pendingRecipes} tone="blue" emoji="📖" />
-<StatCard label="Productos en catálogo" value={products.length} tone="rose" emoji="🥕" />
+        <StatCard label="Donaciones pendientes" value={summary?.pendingDonations ?? 0} tone="yellow" emoji="🎁" />
+        <StatCard label="Recetas por revisar" value={pendingRecipes} tone="blue" emoji="📖" />
+        <StatCard label="Productos en catálogo" value={products.length} tone="rose" emoji="🥕" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -46,6 +47,12 @@ const AdminHomePage = () => {
             <p className="text-xs font-semibold tracking-widest text-brand">ACTIVIDAD RECIENTE</p>
             <h2 className="text-2xl font-light">Feed en tiempo real</h2>
           </div>
+          {feed.length === 0 && (
+            <EmptyState
+              title="Sin actividad reciente"
+              description="Las donaciones y recetas nuevas aparecerán aquí."
+            />
+          )}
           {feed.map((entry, index) => (
             <FeedItem key={entry.id} entry={entry} highlight={index === 0} />
           ))}

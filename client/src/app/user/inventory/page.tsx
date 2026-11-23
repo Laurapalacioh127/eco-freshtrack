@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useInventory } from '@/providers/InventoryProvider';
+import { EmptyState } from '@/components/EmptyState/EmptyState';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import { CategoryChips } from '@/components/CategoryChips/CategoryChips';
@@ -51,8 +52,15 @@ const InventoryPage = () => {
       />
       <SearchBox placeholder="Buscar en mi inventario" value={search} onChange={setSearch} />
       <CategoryChips categories={chips} selected={category} onSelect={setCategory} />
-      {groups.length === 0 && (
-        <p className="text-sm text-neutral-600">No hay alimentos que coincidan con tu búsqueda.</p>
+      {items.length === 0 ? (
+        <EmptyState
+          title="Tu inventario está vacío"
+          description="Escanea o agrega tu primer alimento."
+          actionHref="/user/scan"
+          actionLabel="+ Agregar alimento"
+        />
+      ) : (
+        groups.length === 0 && <EmptyState title="No hay alimentos que coincidan con tu búsqueda." />
       )}
       {groups.map((group) => (
         <section key={group} className="flex flex-col gap-3">

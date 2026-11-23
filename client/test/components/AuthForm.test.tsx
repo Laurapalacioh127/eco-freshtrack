@@ -113,3 +113,46 @@ test('the admin portal does not offer self-registration', () => {
   renderForm('admin');
   expect(screen.queryByRole('button', { name: 'Registrarme' })).not.toBeInTheDocument();
 });
+
+test('shows a success toast after logging in', async () => {
+  login.mockResolvedValue(household);
+  const user = userEvent.setup();
+  renderForm();
+
+  await fillLogin(user);
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión →' }));
+
+  expect(await screen.findByRole('status')).toHaveTextContent('Sesión iniciada');
+});
+
+test('shows the account-ready toast when register returns a session', async () => {
+  register.mockResolvedValue({ needsConfirmation: false });
+  const user = userEvent.setup();
+  renderForm();
+
+  await user.click(screen.getByRole('button', { name: 'Registrarme' }));
+  await user.type(screen.getByLabelText('Nombre completo'), 'Valentina Ríos');
+  await fillLogin(user);
+  await user.type(screen.getByLabelText('Confirmar contraseña'), 'secreto1');
+  await user.click(screen.getByRole('button', { name: 'Crear cuenta →' }));
+
+  expect(await screen.findByRole('status')).toHaveTextContent('¡Tu cuenta está lista!');
+});
+
+test('admin portal empty submit shows inline errors', async () => {
+  const user = userEvent.setup();
+  renderForm('admin');
+
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión →' }));
+
+  expect(screen.getAllByRole('alert').length).toBeGreaterThan(0);
+});
+
+test('admin portal empty submit does not call login', async () => {
+  const user = userEvent.setup();
+  renderForm('admin');
+
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión →' }));
+
+  expect(login).not.toHaveBeenCalled();
+});
