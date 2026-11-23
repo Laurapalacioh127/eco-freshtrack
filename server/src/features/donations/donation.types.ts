@@ -18,3 +18,13 @@ export interface DonationSummary {
 }
 
 export type DonationSummaryData = Omit<DonationSummary, 'pendingDonations'>;
+
+export const DONATION_STATUSES = ['pending', 'approved', 'completed'] as const;
+
+export interface CreateDonationDTO {
+  userId: string;
+  donorName: string;
+  zone: string;
+  items: string;
+  expiresLabel: string;
+}

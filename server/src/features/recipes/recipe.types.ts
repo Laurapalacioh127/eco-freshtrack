@@ -17,3 +17,14 @@ export interface Recipe {
 export const MODERATION_STATUSES = ['approved', 'rejected'] as const;
 
 export type ModerationStatus = (typeof MODERATION_STATUSES)[number];
+
+export interface CreateRecipeDTO {
+  authorId: string;
+  author: string;
+  title: string;
+  minutes: number;
+  difficulty: string;
+  servings: number;
+  ingredients: string[];
+  steps: string[];
+}

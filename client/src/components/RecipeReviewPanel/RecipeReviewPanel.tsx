@@ -10,9 +10,10 @@ interface RecipeReviewPanelProps {
   recipe: Recipe;
   onApprove: () => void;
   onReject: () => void;
+  busy?: boolean;
 }
 
-export const RecipeReviewPanel = ({ recipe, onApprove, onReject }: RecipeReviewPanelProps) => {
+export const RecipeReviewPanel = ({ recipe, onApprove, onReject, busy = false }: RecipeReviewPanelProps) => {
   const [notes, setNotes] = useState('');
 
   return (
@@ -68,14 +69,16 @@ export const RecipeReviewPanel = ({ recipe, onApprove, onReject }: RecipeReviewP
         <button
           type="button"
           onClick={() => onApprove()}
-          className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-glow-brand transition hover:-translate-y-0.5"
+          disabled={busy}
+          className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-glow-brand transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Aprobar receta ✓
         </button>
         <button
           type="button"
           onClick={() => onReject()}
-          className="rounded-full bg-rose-soft px-5 py-2.5 text-sm font-bold text-rose-900 transition hover:bg-rose"
+          disabled={busy}
+          className="rounded-full bg-rose-soft px-5 py-2.5 text-sm font-bold text-rose-900 transition hover:bg-rose disabled:cursor-not-allowed disabled:opacity-60"
         >
           Rechazar con observaciones
         </button>

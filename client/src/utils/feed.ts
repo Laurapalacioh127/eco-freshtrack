@@ -10,8 +10,15 @@ export interface FeedEntry {
   href: string;
 }
 
+const FEED_SIZE = 5;
+
+// Providers keep lists oldest first and append realtime arrivals at the end, so the
+// lists are reversed here: the newest activity must survive the FEED_SIZE cut.
 export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[] => {
-  const pendingDonations = donations
+  const newestDonations = [...donations].reverse();
+  const newestRecipes = [...recipes].reverse();
+
+  const pendingDonations = newestDonations
     .filter((donation) => donation.status === 'pending')
     .map((donation) => ({
       id: `donation-${donation.id}`,
@@ -22,7 +29,7 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
       href: '/admin/donations',
     }));
 
-  const pendingRecipes = recipes
+  const pendingRecipes = newestRecipes
     .filter((recipe) => recipe.status === 'pending')
     .map((recipe) => ({
       id: `recipe-${recipe.id}`,
@@ -33,7 +40,7 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
       href: '/admin/recipes',
     }));
 
-  const assignedDonations = donations
+  const assignedDonations = newestDonations
     .filter((donation) => donation.status === 'approved')
     .map((donation) => ({
       id: `assigned-${donation.id}`,
@@ -44,5 +51,5 @@ export const buildFeed = (donations: Donation[], recipes: Recipe[]): FeedEntry[]
       href: '/admin/donations',
     }));
 
-  return [...pendingDonations, ...pendingRecipes, ...assignedDonations].slice(0, 5);
+  return [...pendingDonations, ...pendingRecipes, ...assignedDonations].slice(0, FEED_SIZE);
 };

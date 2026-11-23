@@ -1,5 +1,5 @@
-import { pool } from '../../db/db';
-import { Recipe, RecipeStatus } from './recipe.types';
+import { pool, withTransaction } from '../../db/db';
+import { CreateRecipeDTO, Recipe, RecipeStatus } from './recipe.types';
 
 const RECIPE_SELECT = `
   WITH ing AS (
@@ -57,4 +57,40 @@ export const updateRecipeStatusRepository = async (
   const result = await pool.query('UPDATE public.recipes SET status = $2 WHERE id = $1', [id, status]);
 
   return (result.rowCount ?? 0) > 0;
+};
+
+// One transaction so a recipe never exists without its ingredients and steps.
+// unnest WITH ORDINALITY inserts each list in a single statement, keeping order.
+export const createRecipeRepository = async (recipe: CreateRecipeDTO): Promise<string> => {
+  return withTransaction(async (client) => {
+    const inserted = await client.query<{ id: string }>(
+      `INSERT INTO public.recipes
+         (author_id, author, title, minutes, difficulty, servings, ingredients_available, ingredients_total)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $7)
+       RETURNING id`,
+      [
+        recipe.authorId,
+        recipe.author,
+        recipe.title,
+        recipe.minutes,
+        recipe.difficulty,
+        recipe.servings,
+        recipe.ingredients.length,
+      ],
+    );
+    const id = inserted.rows[0].id;
+
+    await client.query(
+      `INSERT INTO public.recipe_ingredients (recipe_id, position, name)
+       SELECT $1, ord - 1, name FROM unnest($2::text[]) WITH ORDINALITY AS t(name, ord)`,
+      [id, recipe.ingredients],
+    );
+    await client.query(
+      `INSERT INTO public.recipe_steps (recipe_id, position, description)
+       SELECT $1, ord - 1, description FROM unnest($2::text[]) WITH ORDINALITY AS t(description, ord)`,
+      [id, recipe.steps],
+    );
+
+    return id;
+  });
 };

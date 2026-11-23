@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useInventory } from '@/providers/InventoryProvider';
+import { useRecipes } from '@/providers/RecipesProvider';
+import { useToast } from '@/providers/ToastProvider';
+import { buildRecipeInput } from '@/utils/recipeForm';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { PhotoDropzone } from '@/components/PhotoDropzone/PhotoDropzone';
 import { AuthInput } from '@/components/AuthInput/AuthInput';
@@ -17,15 +20,33 @@ const NewRecipePage = () => {
   const [steps, setSteps] = useState('');
   const [minutes, setMinutes] = useState('');
   const [servings, setServings] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const { submitRecipe } = useRecipes();
+  const { showToast } = useToast();
 
   const toggleIngredient = (name: string) =>
     setSelected((prev) =>
       prev.includes(name) ? prev.filter((ingredient) => ingredient !== name) : [...prev, name]
     );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/user/recipes/status');
+    const result = buildRecipeInput({ title, ingredients: selected, steps, minutes, servings });
+
+    if (!result.ok) {
+      showToast(result.message);
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const recipe = await submitRecipe(result.input);
+      showToast('Receta enviada a revisión', 'success');
+      router.push(`/user/recipes/status?id=${recipe.id}`);
+    } catch (err) {
+      showToast((err as Error).message);
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -59,9 +80,10 @@ const NewRecipePage = () => {
       </div>
       <button
         type="submit"
-        className="w-fit rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white"
+        disabled={submitting}
+        className="w-fit rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Publicar receta en la comunidad →
+        {submitting ? 'Enviando…' : 'Publicar receta en la comunidad →'}
       </button>
     </form>
   );

@@ -1,5 +1,5 @@
 import { pool } from '../../db/db';
-import { Donation, DonationSummary } from './donation.types';
+import { CreateDonationDTO, Donation, DonationStatus, DonationSummary } from './donation.types';
 
 const DONATION_COLUMNS =
   'id, donor_name AS "donorName", zone, items, expires_label AS "expiresLabel", status';
@@ -53,6 +53,29 @@ export const findDonationSummaryRepository = async (
      FROM pending
      LEFT JOIN public.donation_stats s ON s.id = 1`,
     [userId],
+  );
+
+  return result.rows[0];
+};
+
+export const createDonationRepository = async (donation: CreateDonationDTO): Promise<Donation> => {
+  const result = await pool.query<Donation>(
+    `INSERT INTO public.donations (user_id, donor_name, zone, items, expires_label)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING ${DONATION_COLUMNS}`,
+    [donation.userId, donation.donorName, donation.zone, donation.items, donation.expiresLabel],
+  );
+
+  return result.rows[0];
+};
+
+export const updateDonationStatusRepository = async (
+  id: string,
+  status: DonationStatus,
+): Promise<Donation | undefined> => {
+  const result = await pool.query<Donation>(
+    `UPDATE public.donations SET status = $2 WHERE id = $1 RETURNING ${DONATION_COLUMNS}`,
+    [id, status],
   );
 
   return result.rows[0];

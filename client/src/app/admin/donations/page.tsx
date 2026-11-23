@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useDonations } from '@/providers/DonationsProvider';
+import { useToast } from '@/providers/ToastProvider';
 import type { DonationStatus } from '@/types';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
@@ -16,7 +17,9 @@ const filters: { name: string; status: DonationStatus | null }[] = [
 ];
 
 const AdminDonationsPage = () => {
-  const { donations, loading, error } = useDonations();
+  const { donations, loading, error, updateDonationStatus } = useDonations();
+  const { showToast } = useToast();
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [filter, setFilter] = useState('Todas');
   const [search, setSearch] = useState('');
 
@@ -36,6 +39,18 @@ const AdminDonationsPage = () => {
       (!activeStatus || donation.status === activeStatus) &&
       `${donation.donorName} ${donation.zone}`.toLowerCase().includes(search.toLowerCase())
   );
+
+  const changeStatus = async (id: string, status: DonationStatus) => {
+    setBusyId(id);
+    try {
+      await updateDonationStatus(id, status);
+      showToast('Estado de la donación actualizado', 'success');
+    } catch (err) {
+      showToast((err as Error).message);
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
@@ -59,7 +74,12 @@ const AdminDonationsPage = () => {
         <p className="text-sm text-neutral-600">No hay donaciones que coincidan con tu búsqueda.</p>
       )}
       {visible.map((donation) => (
-        <DonationCard key={donation.id} donation={donation} />
+        <DonationCard
+          key={donation.id}
+          donation={donation}
+          busy={busyId === donation.id}
+          onChangeStatus={(status) => changeStatus(donation.id, status)}
+        />
       ))}
     </div>
   );
