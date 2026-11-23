@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import { isUuid } from '../../utils/isUuid';
 import { Product } from './product.types';
 import {
   findAllProductsRepository,
@@ -6,14 +7,11 @@ import {
 } from './product.repository';
 
 export const getProductsService = async (category?: string): Promise<Product[]> => {
-  const products = await findAllProductsRepository();
-  return category
-    ? products.filter((product) => product.category === category)
-    : products;
+  return findAllProductsRepository(category);
 };
 
 export const getProductByIdService = async (id: string): Promise<Product> => {
-  const product = await findProductByIdRepository(id);
+  const product = isUuid(id) ? await findProductByIdRepository(id) : undefined;
 
   if (!product) {
     throw Boom.notFound('Product not found');

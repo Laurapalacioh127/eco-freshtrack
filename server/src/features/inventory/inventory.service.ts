@@ -1,5 +1,6 @@
 //aquí vive la regla de negocio: calcular el estado según los días
 import Boom from '@hapi/boom';
+import { isUuid } from '../../utils/isUuid';
 import {
   InventoryItem,
   InventoryItemData,
@@ -27,12 +28,11 @@ const withStatus = (item: InventoryItemData): InventoryItem => ({
 });
 
 export const getInventoryService = async (category?: string): Promise<InventoryItem[]> => {
-  const items = (await findAllInventoryRepository()).map(withStatus);
-  return category ? items.filter((item) => item.category === category) : items;
+  return (await findAllInventoryRepository(category)).map(withStatus);
 };
 
 export const getInventoryByIdService = async (id: string): Promise<InventoryItem> => {
-  const item = await findInventoryByIdRepository(id);
+  const item = isUuid(id) ? await findInventoryByIdRepository(id) : undefined;
 
   if (!item) {
     throw Boom.notFound('Inventory item not found');

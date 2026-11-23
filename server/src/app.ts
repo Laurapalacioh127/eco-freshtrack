@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { NODE_ENV, PORT } from './config';
+import { initDb } from './db/db';
+import { seedDb } from './db/seed';
 import { errorsMiddleware } from './middlewares/errorsMiddleware';
 import { router as productsRouter } from './features/products/product.router';
 import { router as inventoryRouter } from './features/inventory/inventory.router';
@@ -27,8 +29,15 @@ app.use('/api/users', usersRouter);
 app.use(errorsMiddleware);
 
 if (NODE_ENV !== 'production' && NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     console.log('Server is running on http://localhost:' + PORT);
+
+    try {
+      await initDb();
+      await seedDb();
+    } catch (error) {
+      console.error('Database init failed', error);
+    }
   });
 }
 

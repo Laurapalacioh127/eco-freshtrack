@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import { isUuid } from '../../utils/isUuid';
 import { Donation, DonationSummary } from './donation.types';
 import {
   findAllDonationsRepository,
@@ -7,12 +8,11 @@ import {
 } from './donation.repository';
 
 export const getDonationsService = async (status?: string): Promise<Donation[]> => {
-  const donations = await findAllDonationsRepository();
-  return status ? donations.filter((donation) => donation.status === status) : donations;
+  return findAllDonationsRepository(status);
 };
 
 export const getDonationByIdService = async (id: string): Promise<Donation> => {
-  const donation = await findDonationByIdRepository(id);
+  const donation = isUuid(id) ? await findDonationByIdRepository(id) : undefined;
 
   if (!donation) {
     throw Boom.notFound('Donation not found');
@@ -22,11 +22,5 @@ export const getDonationByIdService = async (id: string): Promise<Donation> => {
 };
 
 export const getDonationSummaryService = async (): Promise<DonationSummary> => {
-  const summary = await findDonationSummaryRepository();
-  const donations = await findAllDonationsRepository();
-
-  return {
-    ...summary,
-    pendingDonations: donations.filter((donation) => donation.status === 'pending').length,
-  };
+  return findDonationSummaryRepository();
 };

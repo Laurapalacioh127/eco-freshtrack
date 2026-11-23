@@ -26,3 +26,7 @@ test('SUPABASE_SECRET_KEY defaults to an empty string', () => {
 test('NODE_ENV is test', () => {
   assert.equal(config.NODE_ENV, 'test');
 });
+
+test('DB_SSL defaults to true when DB_SSL is not "false"', () => {
+  assert.equal(config.DB_SSL, true);
+});
