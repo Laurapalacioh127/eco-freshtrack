@@ -1,8 +1,16 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useAxios } from './AxiosProvider';
 import type { InventoryItem, InventorySummary, ShoppingItem } from '@/types';
+import { upsertById } from '@/utils/upsertById';
+
+export interface AddInventoryItemInput {
+  name: string;
+  category: string;
+  quantity: string;
+  expiresOn: string;
+}
 
 interface InventoryContextType {
   items: InventoryItem[];
@@ -10,6 +18,7 @@ interface InventoryContextType {
   shoppingList: ShoppingItem[];
   loading: boolean;
   error: string | null;
+  addItem: (input: AddInventoryItemInput) => Promise<InventoryItem>;
 }
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
@@ -21,6 +30,15 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const refreshSummary = useCallback(async () => {
+    try {
+      const res = await axios.get<InventorySummary>('/api/inventory/summary');
+      setSummary(res.data);
+    } catch {
+      // Keep the last summary: a failed background refresh is not worth an error state.
+    }
+  }, [axios]);
 
   useEffect(() => {
     const onInit = async () => {
@@ -43,8 +61,18 @@ export const InventoryProvider = ({ children }: { children: ReactNode }) => {
     onInit();
   }, [axios]);
 
+  const addItem = useCallback(
+    async (input: AddInventoryItemInput) => {
+      const res = await axios.post<InventoryItem>('/api/inventory', input);
+      setItems((prev) => upsertById(prev, res.data));
+      void refreshSummary();
+      return res.data;
+    },
+    [axios, refreshSummary],
+  );
+
   return (
-    <InventoryContext.Provider value={{ items, summary, shoppingList, loading, error }}>
+    <InventoryContext.Provider value={{ items, summary, shoppingList, loading, error, addItem }}>
       {children}
     </InventoryContext.Provider>
   );

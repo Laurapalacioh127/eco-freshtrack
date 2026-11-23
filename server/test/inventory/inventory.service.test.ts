@@ -5,10 +5,11 @@ type AsyncFn = (...args: unknown[]) => Promise<unknown>;
 
 const findAllInventoryRepository = mock.fn<AsyncFn>();
 const findInventoryByIdRepository = mock.fn<AsyncFn>();
+const createInventoryItemRepository = mock.fn<AsyncFn>();
 const findShoppingListRepository = mock.fn<AsyncFn>();
 
 mock.module('../../src/features/inventory/inventory.repository', {
-  namedExports: { findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
+  namedExports: { createInventoryItemRepository, findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
 });
 
 type Mod = typeof import('../../src/features/inventory/inventory.service.js');
@@ -16,8 +17,9 @@ let getInventoryService: Mod['getInventoryService'];
 let getInventoryByIdService: Mod['getInventoryByIdService'];
 let getInventorySummaryService: Mod['getInventorySummaryService'];
 let getShoppingListService: Mod['getShoppingListService'];
+let createInventoryItemService: Mod['createInventoryItemService'];
 before(async () => {
-  ({ getInventoryService, getInventoryByIdService, getInventorySummaryService, getShoppingListService } = await import('../../src/features/inventory/inventory.service.js'));
+  ({ createInventoryItemService, getInventoryService, getInventoryByIdService, getInventorySummaryService, getShoppingListService } = await import('../../src/features/inventory/inventory.service.js'));
 });
 
 const ID = '00000000-0000-4000-8000-000000000201';
@@ -90,4 +92,27 @@ test('getShoppingListService returns the repository rows unchanged', async () =>
   findShoppingListRepository.mock.mockImplementation(async () => rows);
 
   assert.deepEqual(await getShoppingListService(USER), rows);
+});
+
+const dto = { userId: USER, name: 'Leche', category: 'Lácteos', quantity: '1 L', expiresOn: '2030-01-15' };
+
+test('createInventoryItemService passes the DTO to the repository unchanged', async () => {
+  createInventoryItemRepository.mock.resetCalls();
+  createInventoryItemRepository.mock.mockImplementation(async () => item(10));
+
+  await createInventoryItemService(dto);
+
+  assert.deepEqual(createInventoryItemRepository.mock.calls[0].arguments, [dto]);
+});
+
+test('createInventoryItemService marks an item expiring in 2 days as soon', async () => {
+  createInventoryItemRepository.mock.mockImplementation(async () => item(2));
+
+  assert.deepEqual(await createInventoryItemService(dto), { ...item(2), status: 'soon' });
+});
+
+test('createInventoryItemService marks an item expiring in -1 days as expired', async () => {
+  createInventoryItemRepository.mock.mockImplementation(async () => item(-1));
+
+  assert.equal((await createInventoryItemService(dto)).status, 'expired');
 });

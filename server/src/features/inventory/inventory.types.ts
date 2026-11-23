@@ -11,6 +11,14 @@ export interface InventoryItem {
 
 export type InventoryItemData = Omit<InventoryItem, 'status'>;
 
+export interface CreateInventoryItemDTO {
+  userId: string;
+  name: string;
+  category: string;
+  quantity: string;
+  expiresOn: string;
+}
+
 export interface InventorySummary {
   registered: number;
   expiringSoon: number;

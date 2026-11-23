@@ -11,11 +11,12 @@ const findAllInventoryRepository = mock.fn(async () => [
   { id: '00000000-0000-4000-8000-000000000202', name: 'Pan', category: 'Panadería', quantity: '1', expiresInDays: 2 },
 ]);
 const findInventoryByIdRepository = mock.fn(async () => undefined);
+const createInventoryItemRepository = mock.fn();
 const shopping = [{ id: '00000000-0000-4000-8000-000000000301', name: 'Huevos', quantity: '12', reason: 'Se acabó', checked: false }];
 const findShoppingListRepository = mock.fn(async () => shopping);
 
 mock.module('../../src/features/inventory/inventory.repository', {
-  namedExports: { findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
+  namedExports: { createInventoryItemRepository, findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
 });
 
 let app: Express;

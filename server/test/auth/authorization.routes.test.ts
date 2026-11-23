@@ -11,9 +11,10 @@ mockAuthModules();
 
 const findAllInventoryRepository = mock.fn<AsyncFn>(async () => []);
 const findInventoryByIdRepository = mock.fn<AsyncFn>(async () => undefined);
+const createInventoryItemRepository = mock.fn<AsyncFn>();
 const findShoppingListRepository = mock.fn<AsyncFn>(async () => []);
 mock.module('../../src/features/inventory/inventory.repository', {
-  namedExports: { findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
+  namedExports: { createInventoryItemRepository, findAllInventoryRepository, findInventoryByIdRepository, findShoppingListRepository },
 });
 
 const findAllDonationsRepository = mock.fn<AsyncFn>(async () => []);

@@ -2,6 +2,7 @@
 import Boom from '@hapi/boom';
 import { isUuid } from '../../utils/isUuid';
 import {
+  CreateInventoryItemDTO,
   InventoryItem,
   InventoryItemData,
   InventoryStatus,
@@ -9,6 +10,7 @@ import {
   ShoppingItem,
 } from './inventory.types';
 import {
+  createInventoryItemRepository,
   findAllInventoryRepository,
   findInventoryByIdRepository,
   findShoppingListRepository,
@@ -26,6 +28,12 @@ const withStatus = (item: InventoryItemData): InventoryItem => ({
   ...item,
   status: getStatus(item.expiresInDays),
 });
+
+export const createInventoryItemService = async (
+  item: CreateInventoryItemDTO,
+): Promise<InventoryItem> => {
+  return withStatus(await createInventoryItemRepository(item));
+};
 
 export const getInventoryService = async (
   userId: string,

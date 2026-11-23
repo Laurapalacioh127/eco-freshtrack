@@ -24,7 +24,7 @@ const ScanPage = () => (
       <Link href="/user/scan/result" className="rounded-full bg-brand shadow-glow-brand transition hover:-translate-y-0.5 px-6 py-3 text-sm font-semibold">
         Escanear alimento con IA
       </Link>
-      <Link href="/user/scan/result" className="text-sm text-white/80">
+      <Link href="/user/scan/manual" className="text-sm text-white/80">
         Agregar manualmente
       </Link>
     </div>

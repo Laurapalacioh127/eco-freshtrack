@@ -1,5 +1,5 @@
 import { pool } from '../../db/db';
-import { InventoryItemData, ShoppingItem } from './inventory.types';
+import { CreateInventoryItemDTO, InventoryItemData, ShoppingItem } from './inventory.types';
 
 const INVENTORY_COLUMNS =
   'id, name, category, quantity, (expires_on - CURRENT_DATE)::int AS "expiresInDays"';
@@ -27,6 +27,19 @@ export const findInventoryByIdRepository = async (
   const result = await pool.query<InventoryItemData>(
     `SELECT ${INVENTORY_COLUMNS} FROM public.inventory_items WHERE id = $1 AND user_id = $2`,
     [id, userId],
+  );
+
+  return result.rows[0];
+};
+
+export const createInventoryItemRepository = async (
+  item: CreateInventoryItemDTO,
+): Promise<InventoryItemData> => {
+  const result = await pool.query<InventoryItemData>(
+    `INSERT INTO public.inventory_items (user_id, name, category, quantity, expires_on)
+     VALUES ($1, $2, $3, $4, $5::date)
+     RETURNING ${INVENTORY_COLUMNS}`,
+    [item.userId, item.name, item.category, item.quantity, item.expiresOn],
   );
 
   return result.rows[0];
